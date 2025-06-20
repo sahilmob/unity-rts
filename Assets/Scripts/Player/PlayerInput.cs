@@ -29,7 +29,7 @@ namespace RTS.Player
 
         private void Update()
         {
-            HandlePanning();
+            // HandlePanning();
             HandleZooming();
             HandleRotation();
         }
