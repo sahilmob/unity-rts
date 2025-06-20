@@ -2,11 +2,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using System;
+using RTS.Units;
 
 namespace RTS.Player
 {
     public class PlayerInput : MonoBehaviour
     {
+        [SerializeField] new Camera camera;
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private CameraConfig cameraConfig;
@@ -15,6 +17,8 @@ namespace RTS.Player
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
         private float maxRotationAmount;
+        private ISelectable selectedUnit;
+
 
         private void Awake()
         {
@@ -29,9 +33,36 @@ namespace RTS.Player
 
         private void Update()
         {
-            // HandlePanning();
+            HandlePanning();
             HandleZooming();
             HandleRotation();
+            HandleLeftClick();
+        }
+
+        private void HandleLeftClick()
+        {
+            if (camera == null) return;
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Default"))
+                && hit.collider.TryGetComponent(out ISelectable selectable))
+                {
+
+                    selectable.Select();
+                    if (selectedUnit != null)
+                    {
+                        selectedUnit.Deselect();
+                    }
+                    selectedUnit = selectable;
+                }
+                else if (selectedUnit != null)
+                {
+                    selectedUnit.Deselect();
+                    selectedUnit = null;
+                }
+            }
         }
 
         private void HandleRotation()
