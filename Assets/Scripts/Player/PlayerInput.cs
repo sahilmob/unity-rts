@@ -9,10 +9,13 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private CinemachineCamera cinemachineCamera;
     [SerializeField] private float keyboardPanSpeed = 5;
     [SerializeField] private float zoomSpeed = 1;
+    [SerializeField] private float rotationSpeed = 1;
     [SerializeField] private float minZoomDistance = 7.5f;
     private CinemachineFollow cinemachineFollow;
     private float zoomStartTime;
+    private float rotationStartTime;
     private Vector3 startingFollowOffset;
+    private float maxRotationAmount;
 
     private void Awake()
     {
@@ -22,12 +25,63 @@ public class PlayerInput : MonoBehaviour
         }
 
         startingFollowOffset = cinemachineFollow.FollowOffset;
+        maxRotationAmount = Mathf.Abs(cinemachineFollow.FollowOffset.z);
     }
 
     private void Update()
     {
         HandlePanning();
         HandleZooming();
+        HandleRotation();
+    }
+
+    private void HandleRotation()
+    {
+        if (ShouldSetRotationStartTime())
+        {
+            rotationStartTime = Time.time;
+        }
+
+        float rotationTime = Mathf.Clamp01((Time.time - rotationStartTime) * rotationSpeed);
+        Vector3 targetFollowOffset;
+
+        if (Keyboard.current.rightShiftKey.isPressed)
+        {
+            targetFollowOffset = new Vector3(
+                maxRotationAmount,
+                cinemachineFollow.FollowOffset.y,
+                0
+            );
+        }
+        else if (Keyboard.current.leftShiftKey.isPressed)
+        {
+            targetFollowOffset = new Vector3(
+            -maxRotationAmount,
+            cinemachineFollow.FollowOffset.y,
+            0
+        );
+        }
+        else
+        {
+            targetFollowOffset = new Vector3(
+                startingFollowOffset.x,
+                cinemachineFollow.FollowOffset.y,
+                startingFollowOffset.z
+            );
+        }
+
+        cinemachineFollow.FollowOffset = Vector3.Slerp(
+            cinemachineFollow.FollowOffset,
+            targetFollowOffset,
+            rotationTime
+        );
+    }
+
+    private bool ShouldSetRotationStartTime()
+    {
+        return Keyboard.current.leftShiftKey.wasPressedThisFrame
+        || Keyboard.current.rightShiftKey.wasPressedThisFrame || Keyboard.current.leftShiftKey.wasReleasedThisFrame
+        || Keyboard.current.rightShiftKey.wasReleasedThisFrame;
     }
 
     private void HandleZooming()
