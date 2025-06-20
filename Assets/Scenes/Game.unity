@@ -4018,7 +4018,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTarget: {fileID: 1907088735}
-  keyboardPanSpeed: 15
+  cinemachineCamera: {fileID: 1959563973}
+  cameraConfig:
+    <EnableEdgePan>k__BackingField: 1
+    <MousePanSpeed>k__BackingField: 5
+    <EdgePanSize>k__BackingField: 50
+    <KeyboardPanSpeed>k__BackingField: 15
+    <ZoomSpeed>k__BackingField: 1
+    <MinZoomDistance>k__BackingField: 7.5
+    <RotationSpeed>k__BackingField: 1
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
