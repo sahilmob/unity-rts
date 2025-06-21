@@ -39,6 +39,7 @@ namespace RTS.Player
             startingFollowOffset = cinemachineFollow.FollowOffset;
             maxRotationAmount = Mathf.Abs(cinemachineFollow.FollowOffset.z);
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
         }
 
         private void OnDestroy()
@@ -48,6 +49,12 @@ namespace RTS.Player
                 selectedUnit.Deselect();
             }
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
+        }
+
+        private void HandleUnitDeselected(UnitDeselectedEvent args)
+        {
+            selectedUnit = null;
         }
 
         private void HandleUnitSelected(UnitSelectedEvent e)
@@ -124,10 +131,8 @@ namespace RTS.Player
                 if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
                 && hit.collider.TryGetComponent(out ISelectable selectable))
                 {
-
                     selectable.Select();
                 }
-
             }
         }
 

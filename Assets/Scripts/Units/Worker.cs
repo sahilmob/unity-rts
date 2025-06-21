@@ -13,7 +13,9 @@ namespace RTS.Units
         private NavMeshAgent agent;
         public void Deselect()
         {
-            decalProjector?.gameObject.SetActive(false);
+            if (decalProjector == null) return;
+            decalProjector.gameObject.SetActive(false);
+            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
         public void MoveTo(Vector3 position)
