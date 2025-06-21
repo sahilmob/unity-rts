@@ -5,14 +5,18 @@ using UnityEngine.Rendering.Universal;
 namespace RTS.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Worker : MonoBehaviour, ISelectable
+    public class Worker : MonoBehaviour, ISelectable, IMovable
     {
-        [SerializeField] private Transform target;
         [SerializeField] private DecalProjector decalProjector;
         private NavMeshAgent agent;
         public void Deselect()
         {
             decalProjector?.gameObject.SetActive(false);
+        }
+
+        public void MoveTo(Vector3 position)
+        {
+            agent.SetDestination(position);
         }
 
         public void Select()
@@ -23,15 +27,6 @@ namespace RTS.Units
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
-            if (target != null)
-            {
-                agent.SetDestination(target.position);
-            }
         }
     }
 }

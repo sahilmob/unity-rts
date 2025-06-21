@@ -13,6 +13,7 @@ namespace RTS.Player
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnitsLayer;
+        [SerializeField] private LayerMask floorLayers;
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
         private float rotationStartTime;
@@ -38,6 +39,21 @@ namespace RTS.Player
             HandleZooming();
             HandleRotation();
             HandleLeftClick();
+            HandleRightClick();
+        }
+
+        private void HandleRightClick()
+        {
+            if (selectedUnit == null || selectedUnit is not IMovable movable) return;
+
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Mouse.current.rightButton.wasReleasedThisFrame
+                && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers)
+            )
+            {
+                movable.MoveTo(hit.point);
+            }
         }
 
         private void HandleLeftClick()
