@@ -4,6 +4,8 @@ using Unity.Cinemachine;
 using RTS.Units;
 using System;
 using Unity.Mathematics;
+using RTS.EventBus;
+using RTS.Events;
 
 namespace RTS.Player
 {
@@ -36,6 +38,21 @@ namespace RTS.Player
 
             startingFollowOffset = cinemachineFollow.FollowOffset;
             maxRotationAmount = Mathf.Abs(cinemachineFollow.FollowOffset.z);
+            Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
+        }
+
+        private void OnDestroy()
+        {
+            if (selectedUnit != null)
+            {
+                selectedUnit.Deselect();
+            }
+            Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
+        }
+
+        private void HandleUnitSelected(UnitSelectedEvent e)
+        {
+            selectedUnit = e.Unit;
         }
 
         private void Update()
@@ -109,7 +126,6 @@ namespace RTS.Player
                 {
 
                     selectable.Select();
-                    selectedUnit = selectable;
                 }
 
             }

@@ -1,3 +1,5 @@
+using RTS.EventBus;
+using RTS.Events;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.Universal;
@@ -21,7 +23,9 @@ namespace RTS.Units
 
         public void Select()
         {
-            decalProjector?.gameObject.SetActive(true);
+            if (decalProjector == null) return;
+            decalProjector.gameObject.SetActive(true);
+            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
 
         private void Awake()
