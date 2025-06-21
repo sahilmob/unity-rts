@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using RTS.Units;
 using System;
-using Unity.Mathematics;
 using RTS.EventBus;
 using RTS.Events;
+using System.Collections.Generic;
 
 namespace RTS.Player
 {
@@ -26,8 +26,9 @@ namespace RTS.Player
         private float rotationStartTime;
         private Vector3 startingFollowOffset;
         private float maxRotationAmount;
-        private ISelectable selectedUnit;
-
+        private List<ISelectable> selectedUnits = new(12);
+        private HashSet<AbstractUnit> addedUnits = new(24);
+        private HashSet<AbstractUnit> aliveUnits = new(100);
 
         private void Awake()
         {
@@ -40,26 +41,33 @@ namespace RTS.Player
             maxRotationAmount = Mathf.Abs(cinemachineFollow.FollowOffset.z);
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.onEvent += HandleUnitSpawn;
+        }
+
+        private void HandleUnitSpawn(UnitSpawnEvent e)
+        {
+            aliveUnits.Add(e.Unit);
         }
 
         private void OnDestroy()
         {
-            if (selectedUnit != null)
+            if (selectedUnits.Count != 0)
             {
-                selectedUnit.Deselect();
+                DeselectAllUnits();
             }
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.onEvent -= HandleUnitSpawn;
         }
 
-        private void HandleUnitDeselected(UnitDeselectedEvent args)
+        private void HandleUnitDeselected(UnitDeselectedEvent e)
         {
-            selectedUnit = null;
+            selectedUnits.Remove(e.Unit);
         }
 
         private void HandleUnitSelected(UnitSelectedEvent e)
         {
-            selectedUnit = e.Unit;
+            selectedUnits.Add(e.Unit);
         }
 
         private void Update()
@@ -78,20 +86,43 @@ namespace RTS.Player
 
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
+                selectionBox.sizeDelta = Vector2.zero;
                 selectionBox.gameObject.SetActive(true);
                 startingMousePosition = Mouse.current.position.ReadValue();
+                addedUnits.Clear();
             }
             else if (Mouse.current.leftButton.isPressed && !Mouse.current.leftButton.wasPressedThisFrame)
             {
-                ResizeSelectionBox();
+                Bounds selectionBox = ResizeSelectionBox();
+                foreach (AbstractUnit u in aliveUnits)
+                {
+                    Vector2 unitPosition = camera.WorldToScreenPoint(u.transform.position);
+                    if (selectionBox.Contains(unitPosition))
+                    {
+                        addedUnits.Add(u);
+                    }
+                }
             }
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
+                DeselectAllUnits();
+                foreach (AbstractUnit u in addedUnits)
+                {
+                    u.Select();
+                }
                 selectionBox.gameObject.SetActive(false);
             }
         }
+        private void DeselectAllUnits()
+        {
+            ISelectable[] currentlySelectedUnits = selectedUnits.ToArray();
+            foreach (ISelectable s in currentlySelectedUnits)
+            {
+                s.Deselect();
+            }
+        }
 
-        private void ResizeSelectionBox()
+        private Bounds ResizeSelectionBox()
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
 
@@ -100,11 +131,13 @@ namespace RTS.Player
 
             selectionBox.anchoredPosition = startingMousePosition + new Vector2(width / 2, height / 2);
             selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+
+            return new Bounds(selectionBox.anchoredPosition, selectionBox.sizeDelta);
         }
 
         private void HandleRightClick()
         {
-            if (selectedUnit == null || selectedUnit is not IMovable movable) return;
+            if (selectedUnits.Count == 0) return;
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -112,28 +145,35 @@ namespace RTS.Player
                 && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers)
             )
             {
-                movable.MoveTo(hit.point);
+                foreach (AbstractUnit u in selectedUnits)
+                {
+                    if (u is not IMovable movable)
+                    {
+                        continue;
+                    }
+                    movable.MoveTo(hit.point);
+                }
             }
         }
 
         private void HandleLeftClick()
         {
-            if (camera == null) return;
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            // if (camera == null) return;
+            // Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (Mouse.current.leftButton.wasReleasedThisFrame)
-            {
-                if (selectedUnit != null)
-                {
-                    selectedUnit.Deselect();
-                }
+            // if (Mouse.current.leftButton.wasReleasedThisFrame)
+            // {
+            //     if (selectedUnits != null)
+            //     {
+            //         selectedUnits.Deselect();
+            //     }
 
-                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
-                && hit.collider.TryGetComponent(out ISelectable selectable))
-                {
-                    selectable.Select();
-                }
-            }
+            //     if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
+            //     && hit.collider.TryGetComponent(out ISelectable selectable))
+            //     {
+            //         selectable.Select();
+            //     }
+            // }
         }
 
         private void HandleRotation()
