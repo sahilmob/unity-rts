@@ -12,6 +12,7 @@ namespace RTS.Player
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private CameraConfig cameraConfig;
+        [SerializeField] private LayerMask selectableUnitsLayer;
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
         private float rotationStartTime;
@@ -46,22 +47,19 @@ namespace RTS.Player
 
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Default"))
+                if (selectedUnit != null)
+                {
+                    selectedUnit.Deselect();
+                }
+
+                if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
                 && hit.collider.TryGetComponent(out ISelectable selectable))
                 {
 
                     selectable.Select();
-                    if (selectedUnit != null)
-                    {
-                        selectedUnit.Deselect();
-                    }
                     selectedUnit = selectable;
                 }
-                else if (selectedUnit != null)
-                {
-                    selectedUnit.Deselect();
-                    selectedUnit = null;
-                }
+
             }
         }
 
