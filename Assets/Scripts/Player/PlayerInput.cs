@@ -162,14 +162,49 @@ namespace RTS.Player
                 && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers)
             )
             {
-                foreach (AbstractUnit u in selectedUnits)
+                List<AbstractUnit> abstractUnits = new(selectedUnits.Count);
+
+                foreach (ISelectable selectable in selectedUnits)
                 {
-                    if (u is not IMovable movable)
+                    if (selectable is AbstractUnit unit)
                     {
-                        continue;
+                        abstractUnits.Add(unit);
                     }
-                    movable.MoveTo(hit.point);
                 }
+
+                int unitsOnLayer = 0;
+                int maxUnitsOnLayer = 1;
+                float circleRadius = 0;
+                float radialOffset = 0;
+
+                foreach (AbstractUnit u in abstractUnits)
+                {
+                    Vector3 targetPosition = new(
+                        hit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
+                        hit.point.y,
+                        hit.point.z + circleRadius * Mathf.Sign(radialOffset * unitsOnLayer)
+                    );
+
+                    u.MoveTo(targetPosition);
+                    unitsOnLayer++;
+
+                    if (unitsOnLayer >= maxUnitsOnLayer)
+                    {
+                        unitsOnLayer = 0;
+                        circleRadius += u.AgentRadius * 3.5f;
+                        maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (u.AgentRadius * 2));
+                        radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+                    }
+                }
+
+                // foreach (AbstractUnit u in selectedUnits)
+                // {
+                //     if (u is not IMovable movable)
+                //     {
+                //         continue;
+                //     }
+                //     movable.MoveTo(hit.point);
+                // }
             }
         }
 
