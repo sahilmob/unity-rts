@@ -8,8 +8,16 @@ namespace RTS.Units
 {
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
-        [SerializeField] private int health;
-        [field: SerializeField] public DecalProjector decalProjector { get; private set; }
+        [field: SerializeField] public int CurrentHealth { get; private set; }
+        [field: SerializeField] public int MaxHealth { get; private set; }
+        [field: SerializeField] private DecalProjector decalProjector;
+        [SerializeField] private UnitSO UnitSO;
+
+        protected virtual void Start()
+        {
+            CurrentHealth = UnitSO.health;
+            MaxHealth = UnitSO.health;
+        }
         public void Deselect()
         {
             if (decalProjector == null) return;
