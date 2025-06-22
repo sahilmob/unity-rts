@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using RTS.Units;
-using System;
 using RTS.EventBus;
 using RTS.Events;
 using System.Collections.Generic;
+using RTS.Commands;
+using UnityEditor.Timeline.Actions;
 
 namespace RTS.Player
 {
@@ -172,39 +173,18 @@ namespace RTS.Player
                     }
                 }
 
-                int unitsOnLayer = 0;
-                int maxUnitsOnLayer = 1;
-                float circleRadius = 0;
-                float radialOffset = 0;
-
-                foreach (AbstractUnit u in abstractUnits)
+                for (int i = 0; i < abstractUnits.Count; i++)
                 {
-                    Vector3 targetPosition = new(
-                        hit.point.x + circleRadius * Mathf.Cos(radialOffset * unitsOnLayer),
-                        hit.point.y,
-                        hit.point.z + circleRadius * Mathf.Sign(radialOffset * unitsOnLayer)
-                    );
-
-                    u.MoveTo(targetPosition);
-                    unitsOnLayer++;
-
-                    if (unitsOnLayer >= maxUnitsOnLayer)
+                    CommandContext ctx = new(abstractUnits[i], hit);
+                    foreach (ICommand c in abstractUnits[i].AvailableCommands)
                     {
-                        unitsOnLayer = 0;
-                        circleRadius += u.AgentRadius * 3.5f;
-                        maxUnitsOnLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (u.AgentRadius * 2));
-                        radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
+                        if (c.CanHandle(ctx))
+                        {
+                            c.Handle(ctx);
+                            break;
+                        }
                     }
                 }
-
-                // foreach (AbstractUnit u in selectedUnits)
-                // {
-                //     if (u is not IMovable movable)
-                //     {
-                //         continue;
-                //     }
-                //     movable.MoveTo(hit.point);
-                // }
             }
         }
 
