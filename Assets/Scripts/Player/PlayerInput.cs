@@ -175,7 +175,7 @@ namespace RTS.Player
 
                 for (int i = 0; i < abstractUnits.Count; i++)
                 {
-                    CommandContext ctx = new(abstractUnits[i], hit);
+                    CommandContext ctx = new(abstractUnits[i], hit, i);
                     foreach (ICommand c in abstractUnits[i].AvailableCommands)
                     {
                         if (c.CanHandle(ctx))
