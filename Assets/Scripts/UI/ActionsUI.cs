@@ -5,8 +5,8 @@ using RTS.Commands;
 using RTS.EventBus;
 using RTS.Events;
 using RTS.Units;
-using Unity.AppUI.UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace RTS.UI
 {
@@ -19,10 +19,13 @@ namespace RTS.UI
         {
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeSelected;
+        }
 
+        private void Start()
+        {
             foreach (UIActionButton button in actionButtons)
             {
-                button.SetIcon(null);
+                button.Disable();
             }
         }
 
@@ -66,13 +69,18 @@ namespace RTS.UI
 
                 if (actionForSlot != null)
                 {
-                    actionButtons[i].SetIcon(actionForSlot.Icon);
+                    actionButtons[i].EnableFor(actionForSlot, HandleClick(actionForSlot));
                 }
                 else
                 {
-                    actionButtons[i].SetIcon(null);
+                    actionButtons[i].Disable();
                 }
             }
+        }
+
+        private UnityAction HandleClick(ActionBase action)
+        {
+            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
         }
     }
 }

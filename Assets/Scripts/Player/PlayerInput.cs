@@ -7,6 +7,9 @@ using RTS.Events;
 using System.Collections.Generic;
 using RTS.Commands;
 using UnityEditor.Timeline.Actions;
+using System;
+using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace RTS.Player
 {
@@ -20,8 +23,9 @@ namespace RTS.Player
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
 
+        private bool wasMouseDownOnUI;
+        private ActionBase activeAction;
         private Vector2 startingMousePosition;
-
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
         private float rotationStartTime;
@@ -43,6 +47,12 @@ namespace RTS.Player
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent += HandleUnitSpawn;
+            Bus<ActionSelectedEvent>.onEvent += HandleActionSelected;
+        }
+
+        private void HandleActionSelected(ActionSelectedEvent e)
+        {
+            activeAction = e.Action;
         }
 
         private void HandleUnitSpawn(UnitSpawnEvent e)
@@ -59,6 +69,7 @@ namespace RTS.Player
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent -= HandleUnitSpawn;
+            Bus<ActionSelectedEvent>.onEvent -= HandleActionSelected;
         }
 
         private void HandleUnitDeselected(UnitDeselectedEvent e)
@@ -100,7 +111,7 @@ namespace RTS.Player
 
         private void HandleMouseRelease()
         {
-            if (!Keyboard.current.leftCtrlKey.isPressed)
+            if (activeAction == null && !Keyboard.current.leftCtrlKey.isPressed)
                 DeselectAllUnits();
             HandleLeftClick();
             foreach (AbstractUnit u in addedUnits)
@@ -112,6 +123,7 @@ namespace RTS.Player
 
         private void HandleMouseDrag()
         {
+            if (activeAction != null || wasMouseDownOnUI) return;
             Bounds selectionBox = ResizeSelectionBox();
             foreach (AbstractUnit u in aliveUnits)
             {
@@ -129,6 +141,7 @@ namespace RTS.Player
             selectionBox.gameObject.SetActive(true);
             startingMousePosition = Mouse.current.position.ReadValue();
             addedUnits.Clear();
+            wasMouseDownOnUI = EventSystem.current.IsPointerOverGameObject();
         }
 
         private void DeselectAllUnits()
@@ -193,10 +206,20 @@ namespace RTS.Player
             if (camera == null) return;
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
+            if (activeAction == null && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
             && hit.collider.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
+            }
+            else if (activeAction != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers))
+            {
+                List<AbstractUnit> abstractUnits = selectedUnits.Where(unit => unit is AbstractUnit).Cast<AbstractUnit>().ToList();
+                for (int i = 0; i < abstractUnits.Count; i++)
+                {
+                    CommandContext ctx = new(abstractUnits[i], hit, i);
+                    activeAction.Handle(ctx);
+                }
+                activeAction = null;
             }
         }
 
