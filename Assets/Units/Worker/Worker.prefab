@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 8980997614320244810}
   - component: {fileID: 4639809709072199639}
   - component: {fileID: 1289879592863205657}
-  - component: {fileID: 5442813407258093360}
+  - component: {fileID: 8985835187612719804}
   m_Layer: 6
   m_Name: Worker
   m_TagString: Untagged
@@ -156,7 +156,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!195 &5442813407258093360
+--- !u!195 &8985835187612719804
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

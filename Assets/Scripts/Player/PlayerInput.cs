@@ -6,8 +6,6 @@ using RTS.EventBus;
 using RTS.Events;
 using System.Collections.Generic;
 using RTS.Commands;
-using UnityEditor.Timeline.Actions;
-using System;
 using System.Linq;
 using UnityEngine.EventSystems;
 
@@ -53,6 +51,10 @@ namespace RTS.Player
         private void HandleActionSelected(ActionSelectedEvent e)
         {
             activeAction = e.Action;
+            if (!activeAction.RequiresClickToActivate)
+            {
+                ActivateAction(new RaycastHit());
+            }
         }
 
         private void HandleUnitSpawn(UnitSpawnEvent e)
@@ -111,7 +113,7 @@ namespace RTS.Player
 
         private void HandleMouseRelease()
         {
-            if (activeAction == null && !Keyboard.current.leftCtrlKey.isPressed)
+            if (!wasMouseDownOnUI && activeAction == null && !Keyboard.current.leftCtrlKey.isPressed)
                 DeselectAllUnits();
             HandleLeftClick();
             foreach (AbstractUnit u in addedUnits)
@@ -213,14 +215,19 @@ namespace RTS.Player
             }
             else if (activeAction != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers))
             {
-                List<AbstractUnit> abstractUnits = selectedUnits.Where(unit => unit is AbstractUnit).Cast<AbstractUnit>().ToList();
-                for (int i = 0; i < abstractUnits.Count; i++)
-                {
-                    CommandContext ctx = new(abstractUnits[i], hit, i);
-                    activeAction.Handle(ctx);
-                }
-                activeAction = null;
+                ActivateAction(hit);
             }
+        }
+
+        private void ActivateAction(RaycastHit hit)
+        {
+            List<AbstractCommandable> abstractCommandables = selectedUnits.Where(unit => unit is AbstractCommandable).Cast<AbstractCommandable>().ToList();
+            for (int i = 0; i < abstractCommandables.Count; i++)
+            {
+                CommandContext ctx = new(abstractCommandables[i], hit, i);
+                activeAction.Handle(ctx);
+            }
+            activeAction = null;
         }
 
         private void HandleRotation()

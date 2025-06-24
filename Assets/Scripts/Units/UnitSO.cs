@@ -8,5 +8,7 @@ namespace RTS.Units
     public class UnitSO : ScriptableObject
     {
         [field: SerializeField] public int health { get; private set; } = 100;
+        [field: SerializeField] public GameObject Prefab { get; private set; }
+        [field: SerializeField] public float BuildTime { get; private set; } = 5;
     }
 }
