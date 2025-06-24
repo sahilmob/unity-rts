@@ -29340,6 +29340,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Progress Bar
       objectReference: {fileID: 0}
+    - target: {fileID: 8448819135003246128, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -18.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448819135003246128, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000030517578
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
