@@ -18,20 +18,25 @@ namespace RTS.Units
         public void MoveTo(Vector3 position)
         {
             graphAgent.SetVariableValue("TargetLocation", position);
+            graphAgent.SetVariableValue("Command", UnitCommand.Move);
         }
 
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             graphAgent = GetComponent<BehaviorGraphAgent>();
-            MoveTo(transform.position);
+            graphAgent.SetVariableValue("Command", UnitCommand.Stop);
         }
 
         protected override void Start()
         {
             base.Start();
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
-            MoveTo(transform.position);
+        }
+
+        public void Stop()
+        {
+            graphAgent.SetVariableValue("Command", UnitCommand.Stop);
         }
     }
 }

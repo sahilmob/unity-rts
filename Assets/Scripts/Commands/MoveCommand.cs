@@ -4,7 +4,7 @@ using UnityEngine;
 namespace RTS.Commands
 {
 
-    [CreateAssetMenu(fileName = "Move Action", menuName = "AI/Command/Move", order = 100)]
+    [CreateAssetMenu(fileName = "Move Action", menuName = "AI/Commands/Move", order = 100)]
     public class MoveCommand : ActionBase
     {
         [SerializeField] private float radiusMultiplier = 3.5f;
