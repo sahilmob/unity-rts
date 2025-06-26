@@ -7452,7 +7452,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcc21978304bd8be1a969954981bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionsUi: {fileID: 1741608388}
+  actionsUI: {fileID: 1741608388}
+  buildingBuildingUI: {fileID: 1619984283}
 --- !u!1001 &646904507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8561,6 +8562,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1715156035423810196, guid: 72cd382a2944ed14486d3a00a5e1cedc, type: 3}
   m_PrefabInstance: {fileID: 724398465}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &727858950 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5478740862375836643, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+  m_PrefabInstance: {fileID: 684018148024924124}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b381143d1f004549b93923f3a1d653c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &729112614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21579,6 +21591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1619984282}
+  - component: {fileID: 1619984283}
   m_Layer: 5
   m_Name: Building In Progress Container
   m_TagString: Untagged
@@ -21613,6 +21626,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1619984283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619984281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70e4392e0ea4454d93930b28e8413c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  progressBar: {fileID: 727858950}
 --- !u!1 &1621070753
 GameObject:
   m_ObjectHideFlags: 0

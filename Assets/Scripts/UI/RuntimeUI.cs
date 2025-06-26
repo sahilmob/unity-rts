@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RTS.EventBus;
 using RTS.Events;
 using RTS.UI.Container;
@@ -10,11 +11,18 @@ namespace RTS.UI
     public class RuntimeUI : MonoBehaviour
     {
         private HashSet<AbstractCommandable> selectedUnits = new();
-        [SerializeField] public ActionsUI actionsUi;
+        [SerializeField] private ActionsUI actionsUI;
+        [SerializeField] private BuildingBuildingUI buildingBuildingUI;
         private void Awake()
         {
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
+        }
+
+        private void Start()
+        {
+            actionsUI.Disable();
+            buildingBuildingUI.Disable();
         }
 
         private void OnDestroy()
@@ -31,9 +39,22 @@ namespace RTS.UI
             }
 
             if (selectedUnits.Count == 0)
-                actionsUi.Disable();
+            {
+                actionsUI.Disable();
+                buildingBuildingUI.Disable();
+            }
             else
-                actionsUi.EnableFor(selectedUnits);
+            {
+                actionsUI.EnableFor(selectedUnits);
+                if (selectedUnits.Count == 1 && selectedUnits.First() is BaseBuilding building)
+                {
+                    buildingBuildingUI.EnableFor(building);
+                }
+                else
+                {
+                    buildingBuildingUI.Disable();
+                }
+            }
         }
 
         private void HandleUnitSelected(UnitSelectedEvent e)
@@ -41,7 +62,12 @@ namespace RTS.UI
             if (e.Unit is AbstractCommandable unit)
             {
                 selectedUnits.Add(unit);
-                actionsUi.EnableFor(selectedUnits);
+                actionsUI.EnableFor(selectedUnits);
+            }
+
+            if (selectedUnits.Count == 1 && e.Unit is BaseBuilding building)
+            {
+                buildingBuildingUI.EnableFor(building);
             }
         }
     }
