@@ -14,6 +14,7 @@ namespace RTS.UI.Components
         void Awake()
         {
             button = GetComponent<Button>();
+            Disable();
         }
 
         public void EnableFor(ActionBase action, UnityAction onClick)
