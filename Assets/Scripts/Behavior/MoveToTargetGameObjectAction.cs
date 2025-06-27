@@ -21,13 +21,14 @@ namespace RTS.Behavior
             {
                 return Status.Failure;
             }
+            Vector3 targetPosition = GetTargetPosition();
 
-            if (Vector3.Distance(agent.transform.position, TargetGameObject.Value.transform.position) <= agent.stoppingDistance)
+            if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
                 return Status.Success;
             }
 
-            agent.SetDestination(TargetGameObject.Value.transform.position);
+            agent.SetDestination(targetPosition);
 
             return Status.Running;
         }
@@ -41,6 +42,11 @@ namespace RTS.Behavior
             }
 
             return Status.Running;
+        }
+
+        private Vector3 GetTargetPosition()
+        {
+            return TargetGameObject.Value.TryGetComponent(out Collider collider) ? collider.ClosestPoint(agent.transform.position) : TargetGameObject.Value.transform.position;
         }
     }
 }
