@@ -73,12 +73,10 @@ namespace RTS.Behavior
         protected override Status OnUpdate()
         {
             animator?.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
-
-            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            if (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
             {
                 return Status.Running;
             }
-
 
             if (Supply.Value != null && !Supply.Value.IsBusy && Supply.Value.Amount > 0)
             {
