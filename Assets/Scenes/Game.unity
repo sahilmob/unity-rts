@@ -4382,9 +4382,12 @@ MonoBehaviour:
     <ZoomSpeed>k__BackingField: 1
     <MinZoomDistance>k__BackingField: 7.5
     <RotationSpeed>k__BackingField: 1
-  selectableUnitsLayer:
+  selectableUnitsLayers:
     serializedVersion: 2
     m_Bits: 192
+  intractableUnitsLayers:
+    serializedVersion: 2
+    m_Bits: 704
   floorLayers:
     serializedVersion: 2
     m_Bits: 256

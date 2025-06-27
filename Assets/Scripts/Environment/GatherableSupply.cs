@@ -23,7 +23,7 @@ namespace RTS.Environment
             {
                 return false;
             }
-
+            IsBusy = true;
             return true;
         }
 

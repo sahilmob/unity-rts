@@ -17,7 +17,8 @@ namespace RTS.Player
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
         [SerializeField] private CameraConfig cameraConfig;
-        [SerializeField] private LayerMask selectableUnitsLayer;
+        [SerializeField] private LayerMask selectableUnitsLayers;
+        [SerializeField] private LayerMask intractableUnitsLayers;
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
 
@@ -175,7 +176,7 @@ namespace RTS.Player
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
             if (Mouse.current.rightButton.wasReleasedThisFrame
-                && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers)
+                && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers | intractableUnitsLayers)
             )
             {
                 List<AbstractUnit> abstractUnits = new(selectedUnits.Count);
@@ -208,12 +209,12 @@ namespace RTS.Player
             if (camera == null) return;
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (activeAction == null && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayer)
+            if (activeAction == null && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
             && hit.collider.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
             }
-            else if (activeAction != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers))
+            else if (activeAction != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers | intractableUnitsLayers))
             {
                 ActivateAction(hit);
             }
@@ -225,7 +226,8 @@ namespace RTS.Player
             for (int i = 0; i < abstractCommandables.Count; i++)
             {
                 CommandContext ctx = new(abstractCommandables[i], hit, i);
-                activeAction.Handle(ctx);
+                if (activeAction.CanHandle(ctx))
+                    activeAction.Handle(ctx);
             }
             activeAction = null;
         }

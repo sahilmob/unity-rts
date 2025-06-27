@@ -6,6 +6,7 @@ namespace RTS.Units
     public enum UnitCommand
     {
         Stop,
-        Move
+        Move,
+        Gather
     }
 }
