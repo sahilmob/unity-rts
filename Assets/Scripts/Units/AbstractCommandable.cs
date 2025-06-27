@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using RTS.Commands;
 using RTS.EventBus;
 using RTS.Events;
@@ -14,7 +13,7 @@ namespace RTS.Units
         [field: SerializeField] public int MaxHealth { get; private set; }
         [field: SerializeField] public ActionBase[] AvailableCommands { get; private set; }
         [field: SerializeField] private DecalProjector decalProjector;
-        [SerializeField] private UnitSO UnitSO;
+        [field: SerializeField] public UnitSO UnitSO { get; private set; }
 
         protected virtual void Start()
         {
