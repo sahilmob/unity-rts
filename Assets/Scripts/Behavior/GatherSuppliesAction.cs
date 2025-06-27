@@ -16,9 +16,10 @@ namespace RTS.Behavior
         [SerializeReference] public BlackboardVariable<GameObject> Unit;
         [SerializeReference] public BlackboardVariable<int> Amount;
         [SerializeReference] public BlackboardVariable<GatherableSupply> GatherableSupplies;
+        [SerializeReference] public BlackboardVariable<SupplySO> SupplySO;
         private Animator animator;
-
         private float enterTime;
+
         protected override Status OnStart()
         {
             if (GatherableSupplies.Value == null)
@@ -32,6 +33,7 @@ namespace RTS.Behavior
 
             enterTime = Time.time;
             GatherableSupplies.Value.BeginGather();
+            SupplySO.Value = GatherableSupplies.Value.Supply;
 
             return Status.Running;
         }
