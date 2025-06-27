@@ -4,6 +4,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using RTS.Utilities;
 
 namespace RTS.Behavior
 {
@@ -15,12 +16,16 @@ namespace RTS.Behavior
         [SerializeReference] public BlackboardVariable<GameObject> TargetGameObject;
 
         private NavMeshAgent agent;
+        private Animator animator;
         protected override Status OnStart()
         {
             if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
             {
                 return Status.Failure;
             }
+
+            Agent.Value.TryGetComponent(out animator);
+
             Vector3 targetPosition = GetTargetPosition();
 
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
@@ -36,17 +41,22 @@ namespace RTS.Behavior
         protected override Status OnUpdate()
         {
 
+            animator?.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 return Status.Success;
             }
-
             return Status.Running;
         }
 
         private Vector3 GetTargetPosition()
         {
             return TargetGameObject.Value.TryGetComponent(out Collider collider) ? collider.ClosestPoint(agent.transform.position) : TargetGameObject.Value.transform.position;
+        }
+
+        protected override void OnEnd()
+        {
+            animator?.SetFloat(AnimationConstants.SPEED, 0);
         }
     }
 }
