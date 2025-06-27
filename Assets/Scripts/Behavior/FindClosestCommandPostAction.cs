@@ -41,6 +41,5 @@ namespace RTS.Behavior
 
             return Status.Success;
         }
-
     }
 }

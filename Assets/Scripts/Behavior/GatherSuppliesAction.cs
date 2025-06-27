@@ -23,7 +23,6 @@ namespace RTS.Behavior
             GatherableSupplies.Value.BeginGather();
 
             return Status.Running;
-
         }
 
         protected override Status OnUpdate()
