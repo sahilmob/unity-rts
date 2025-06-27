@@ -41,5 +41,10 @@ namespace RTS.Environment
 
             return amountGathered;
         }
+
+        public void Abort()
+        {
+            IsBusy = false;
+        }
     }
 }

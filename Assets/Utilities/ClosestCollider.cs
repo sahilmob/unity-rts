@@ -13,7 +13,7 @@ namespace RTS.Utilities
         }
         public int Compare(Collider x, Collider y)
         {
-            return (x.transform.position - targetPosition).sqrMagnitude.CompareTo(y.transform.position - targetPosition);
+            return (x.transform.position - targetPosition).sqrMagnitude.CompareTo((y.transform.position - targetPosition).sqrMagnitude);
         }
     }
 }
