@@ -341,20 +341,20 @@ namespace RTS.Player
             int screenWidth = Screen.width;
             int screenHight = Screen.height;
 
-            if (mousePosition.x <= cameraConfig.EdgePanSize)
+            if (mousePosition.x >= 0 && mousePosition.x <= cameraConfig.EdgePanSize)
             {
                 moveAmount.x -= cameraConfig.MousePanSpeed;
             }
-            else if (mousePosition.x >= screenWidth - cameraConfig.EdgePanSize)
+            else if (mousePosition.x <= screenWidth && mousePosition.x >= screenWidth - cameraConfig.EdgePanSize)
             {
                 moveAmount.x += cameraConfig.MousePanSpeed;
             }
 
-            if (mousePosition.y >= screenHight - cameraConfig.EdgePanSize)
+            if (mousePosition.y <= screenHight && mousePosition.y >= screenHight - cameraConfig.EdgePanSize)
             {
                 moveAmount.y += cameraConfig.MousePanSpeed;
             }
-            else if (mousePosition.y <= cameraConfig.EdgePanSize)
+            else if (mousePosition.y >= 0 && mousePosition.y <= cameraConfig.EdgePanSize)
             {
                 moveAmount.y -= cameraConfig.MousePanSpeed;
             }

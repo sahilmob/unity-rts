@@ -41,10 +41,10 @@ namespace RTS.Behavior
 
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                return Status.Running;
+                return Status.Success;
             }
 
-            if (!Supply.Value.IsBusy && Supply.Value.Amount > 0)
+            if (Supply.Value != null && !Supply.Value.IsBusy && Supply.Value.Amount > 0)
             {
                 return Status.Success;
             }
