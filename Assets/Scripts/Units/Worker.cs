@@ -57,6 +57,11 @@ namespace RTS.Units
                 return null;
             }
 
+            graphAgent.SetVariableValue("BuildingSO", buildingSO);
+            graphAgent.SetVariableValue("TargetLocation", targetLocation);
+            graphAgent.SetVariableValue("Ghost", instance);
+            graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
+
             return instance;
         }
 
