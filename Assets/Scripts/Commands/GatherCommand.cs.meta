@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 602bac879967643daa1fd08b3b725187
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - <Icon>k__BackingField: {instanceID: 0}
+  - commandPostSO: {fileID: 11400000, guid: 31007b28a2406434db4c58ddd11c005b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

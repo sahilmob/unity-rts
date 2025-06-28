@@ -7,6 +7,7 @@ namespace RTS.Units
     {
         Stop,
         Move,
-        Gather
+        Gather,
+        ReturnSupplies
     }
 }
