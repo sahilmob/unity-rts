@@ -82,7 +82,10 @@ namespace RTS.Player
 
         private void HandleUnitSelected(UnitSelectedEvent e)
         {
-            selectedUnits.Add(e.Unit);
+            if (!selectedUnits.Contains(e.Unit))
+            {
+                selectedUnits.Add(e.Unit);
+            }
         }
 
         private void Update()
