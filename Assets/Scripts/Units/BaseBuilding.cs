@@ -29,7 +29,9 @@ namespace RTS.Units
         {
             base.Start();
             if (navMeshObstacle != null)
+            {
                 navMeshObstacle.enabled = true;
+            }
         }
         public void BuildUnit(AbstractUnitSO unit)
         {

@@ -14,6 +14,7 @@ namespace RTS.Behavior
         [SerializeReference] public BlackboardVariable<GameObject> Self;
         [SerializeReference] public BlackboardVariable<BuildingSO> BuildingSO;
         [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
+        [SerializeReference] public BlackboardVariable<BaseBuilding> BuildingUnderConstruction;
         private float startTime;
         private BaseBuilding completeBuilding;
         private Vector3 startPosition;
@@ -26,8 +27,12 @@ namespace RTS.Behavior
             }
             startTime = Time.time;
             GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
-            completeBuilding = building.GetComponent<BaseBuilding>();
+
+            if (!building.TryGetComponent(out completeBuilding) || completeBuilding.MainRenderer == null) return Status.Failure;
+
             Renderer buildingRenderer = completeBuilding.MainRenderer;
+
+            BuildingUnderConstruction.Value = completeBuilding;
 
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
             completeBuilding.transform.position = startPosition;
