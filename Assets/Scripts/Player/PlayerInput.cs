@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using RTS.Commands;
 using System.Linq;
 using UnityEngine.EventSystems;
+using Unity.Mathematics;
+using System;
 
 namespace RTS.Player
 {
@@ -24,6 +26,7 @@ namespace RTS.Player
 
         private bool wasMouseDownOnUI;
         private ActionBase activeAction;
+        private GameObject ghostInstance;
         private Vector2 startingMousePosition;
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
@@ -55,6 +58,10 @@ namespace RTS.Player
             if (!activeAction.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
+            }
+            else if (activeAction.GhostPrefab != null)
+            {
+                ghostInstance = Instantiate(activeAction.GhostPrefab);
             }
         }
 
@@ -95,6 +102,26 @@ namespace RTS.Player
             HandleRotation();
             HandleRightClick();
             HandleDragSelect();
+            HandleGhost();
+        }
+
+        private void HandleGhost()
+        {
+            if (ghostInstance == null) return;
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+            if (Keyboard.current.escapeKey.wasReleasedThisFrame)
+            {
+                Destroy(ghostInstance);
+                ghostInstance = null;
+                activeAction = null;
+                return;
+            }
+
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers))
+            {
+                ghostInstance.transform.position = hit.point;
+            }
         }
 
         private void HandleDragSelect()
@@ -225,6 +252,12 @@ namespace RTS.Player
 
         private void ActivateAction(RaycastHit hit)
         {
+            if (ghostInstance != null)
+            {
+                Destroy(ghostInstance);
+                ghostInstance = null;
+            }
+
             List<AbstractCommandable> abstractCommandables = selectedUnits.Where(unit => unit is AbstractCommandable).Cast<AbstractCommandable>().ToList();
             for (int i = 0; i < abstractCommandables.Count; i++)
             {

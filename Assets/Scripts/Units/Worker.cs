@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RTS.Units
 {
-    public class Worker : AbstractUnit
+    public class Worker : AbstractUnit, IBuildingBuilder
     {
         public bool HasSupplies
         {
@@ -43,6 +43,22 @@ namespace RTS.Units
             graphAgent.SetVariableValue("Command", UnitCommand.ReturnSupplies);
         }
 
+
+        public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
+        {
+            GameObject instance = Instantiate(buildingSO.Prefab, targetLocation, Quaternion.identity);
+            if (instance.TryGetComponent(out BaseBuilding baseBuilding))
+            {
+                baseBuilding.ShowGhostVisuals();
+            }
+            else
+            {
+                Debug.LogError($"Missing base building on Prefab for BuildingSO: {buildingSO.name}! Cannot build!");
+                return null;
+            }
+
+            return instance;
+        }
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)
         {

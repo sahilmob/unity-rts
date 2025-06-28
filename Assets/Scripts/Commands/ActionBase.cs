@@ -9,6 +9,7 @@ namespace RTS.Commands
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: Range(0, 8)] public int Slot;
         [field: SerializeField] public bool RequiresClickToActivate { get; private set; } = true;
+        [field: SerializeField] public GameObject GhostPrefab { get; private set; }
         public abstract bool CanHandle(CommandContext ctx);
         public abstract void Handle(CommandContext ctx);
     }

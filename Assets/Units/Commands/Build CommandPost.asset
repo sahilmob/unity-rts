@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e015fa784ac0443bb7db5ecb7f6eab0, type: 3}
+  m_Name: Build CommandPost
+  m_EditorClassIdentifier: 
+  <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
+  Slot: 0
+  <RequiresClickToActivate>k__BackingField: 1
+  <GhostPrefab>k__BackingField: {fileID: 1531379302494048952, guid: 3dca70a755bb14dca942ff2b6562ac07, type: 3}
+  <buildingSO>k__BackingField: {fileID: 11400000, guid: fb124e94a49a342219d39ce1ab6cd9c5, type: 2}

@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace RTS.Units
 {
@@ -12,10 +11,17 @@ namespace RTS.Units
         public AbstractUnitSO[] Queue => buildQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
         [field: SerializeField] public AbstractUnitSO BuildingUnit { get; private set; }
+        [SerializeField] private MeshRenderer mainRenderer;
         private List<AbstractUnitSO> buildQueue = new(MAX_QUEUE_SIZE);
+        private BuildingSO buildingSO;
         public int QueueSize => buildQueue.Count;
         public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
+
+        private void Awake()
+        {
+            buildingSO = UnitSO as BuildingSO;
+        }
         public void BuildUnit(AbstractUnitSO unit)
         {
             if (buildQueue.Count >= MAX_QUEUE_SIZE) return;
@@ -57,6 +63,11 @@ namespace RTS.Units
             {
                 OnQueueUpdated?.Invoke(buildQueue.ToArray());
             }
+        }
+
+        public void ShowGhostVisuals()
+        {
+            mainRenderer.material = buildingSO.PlacementMaterial;
         }
 
         private IEnumerator DoBuildUnits()
