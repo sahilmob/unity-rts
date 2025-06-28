@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fa63bc56e0e487e9fdeed3b553764e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4787325f359cf4f6f8056ccdb3fcd21e, type: 3}
   m_Name: Rifleman
   m_EditorClassIdentifier: 
   <health>k__BackingField: 100

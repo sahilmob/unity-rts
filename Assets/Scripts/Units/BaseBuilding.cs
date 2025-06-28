@@ -9,14 +9,14 @@ namespace RTS.Units
     public class BaseBuilding : AbstractCommandable
     {
         private const int MAX_QUEUE_SIZE = 5;
-        public UnitSO[] Queue => buildQueue.ToArray();
+        public AbstractUnitSO[] Queue => buildQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
-        [field: SerializeField] public UnitSO BuildingUnit { get; private set; }
-        private List<UnitSO> buildQueue = new(MAX_QUEUE_SIZE);
+        [field: SerializeField] public AbstractUnitSO BuildingUnit { get; private set; }
+        private List<AbstractUnitSO> buildQueue = new(MAX_QUEUE_SIZE);
         public int QueueSize => buildQueue.Count;
-        public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
+        public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
-        public void BuildUnit(UnitSO unit)
+        public void BuildUnit(AbstractUnitSO unit)
         {
             if (buildQueue.Count >= MAX_QUEUE_SIZE) return;
 

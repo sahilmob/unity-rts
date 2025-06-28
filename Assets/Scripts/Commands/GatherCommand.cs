@@ -7,7 +7,7 @@ namespace RTS.Commands
     [CreateAssetMenu(fileName = "Gather Action", menuName = "Units/Commands/Gather", order = 105)]
     class GatherCommand : ActionBase
     {
-        [SerializeField] private UnitSO commandPostSO;
+        [SerializeField] private AbstractUnitSO commandPostSO;
         public override bool CanHandle(CommandContext ctx)
         {
             return ctx.Commandable is Worker

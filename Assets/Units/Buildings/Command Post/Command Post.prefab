@@ -73,7 +73,7 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 0
   <AvailableCommands>k__BackingField: []
   decalProjector: {fileID: 7068700595118860376}
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: 31007b28a2406434db4c58ddd11c005b, type: 2}
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: fb124e94a49a342219d39ce1ab6cd9c5, type: 2}
   <CurrentQueueStartTime>k__BackingField: 0
   <BuildingUnit>k__BackingField: {fileID: 0}
 --- !u!208 &5244363836639562409

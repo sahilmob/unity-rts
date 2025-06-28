@@ -13,7 +13,7 @@ namespace RTS.Units
         [field: SerializeField] public int MaxHealth { get; private set; }
         [field: SerializeField] public ActionBase[] AvailableCommands { get; private set; }
         [field: SerializeField] private DecalProjector decalProjector;
-        [field: SerializeField] public UnitSO UnitSO { get; private set; }
+        [field: SerializeField] public AbstractUnitSO UnitSO { get; private set; }
         private ActionBase[] initialCommands;
 
         protected virtual void Start()
@@ -24,18 +24,14 @@ namespace RTS.Units
         }
         public void Deselect()
         {
-            if (decalProjector != null)
-            {
-                decalProjector.gameObject.SetActive(false);
-            }
+            decalProjector?.gameObject.SetActive(false);
             SetCommandOverrides(null);
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
         public void Select()
         {
-            if (decalProjector == null) return;
-            decalProjector.gameObject.SetActive(true);
+            decalProjector?.gameObject.SetActive(true);
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
 
