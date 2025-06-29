@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RTS.EventBus;
@@ -17,6 +18,7 @@ namespace RTS.UI
         {
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
+            Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;
         }
 
         private void Start()
@@ -29,6 +31,12 @@ namespace RTS.UI
         {
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
+            Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent e)
+        {
+            Bus<UnitDeselectedEvent>.Raise(new(e.Unit));
         }
 
         private void HandleUnitDeselected(UnitDeselectedEvent e)

@@ -50,6 +50,13 @@ namespace RTS.Player
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent += HandleUnitSpawn;
             Bus<ActionSelectedEvent>.onEvent += HandleActionSelected;
+            Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent e)
+        {
+            Bus<UnitDeselectedEvent>.Raise(new(e.Unit));
+            aliveUnits.Remove(e.Unit);
         }
 
         private void HandleActionSelected(ActionSelectedEvent e)
@@ -80,6 +87,7 @@ namespace RTS.Player
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent -= HandleUnitSpawn;
             Bus<ActionSelectedEvent>.onEvent -= HandleActionSelected;
+            Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
         }
 
         private void HandleUnitDeselected(UnitDeselectedEvent e)

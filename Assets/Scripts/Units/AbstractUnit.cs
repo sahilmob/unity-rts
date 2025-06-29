@@ -38,5 +38,10 @@ namespace RTS.Units
         {
             graphAgent.SetVariableValue("Command", UnitCommand.Stop);
         }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.Raise(new(this));
+        }
     }
 }
