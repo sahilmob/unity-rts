@@ -230,7 +230,7 @@ namespace RTS.Player
                 for (int i = 0; i < abstractUnits.Count; i++)
                 {
                     CommandContext ctx = new(abstractUnits[i], hit, i);
-                    foreach (ICommand c in abstractUnits[i].AvailableCommands)
+                    foreach (ICommand c in GethAvailableCommands(abstractUnits[i]))
                     {
                         if (c.CanHandle(ctx))
                         {
@@ -240,6 +240,24 @@ namespace RTS.Player
                     }
                 }
             }
+        }
+
+        private List<ActionBase> GethAvailableCommands(AbstractUnit unit)
+        {
+            OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands
+                .Where(c => c is OverrideCommandsCommand)
+                .Cast<OverrideCommandsCommand>().ToArray();
+
+            List<ActionBase> allAvailableCommands = new();
+
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            {
+                allAvailableCommands.AddRange(overrideCommand.Commands.Where(c => c is not OverrideCommandsCommand));
+            }
+
+            allAvailableCommands.AddRange(unit.AvailableCommands.Where(c => c is not OverrideCommandsCommand));
+
+            return allAvailableCommands;
         }
 
         private void HandleLeftClick()
@@ -270,8 +288,7 @@ namespace RTS.Player
             for (int i = 0; i < abstractCommandables.Count; i++)
             {
                 CommandContext ctx = new(abstractCommandables[i], hit, i);
-                if (activeAction.CanHandle(ctx))
-                    activeAction.Handle(ctx);
+                activeAction.Handle(ctx);
             }
             activeAction = null;
         }

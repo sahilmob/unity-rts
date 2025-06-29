@@ -51,11 +51,7 @@ namespace RTS.Units
         public GameObject Build(BuildingSO buildingSO, Vector3 targetLocation)
         {
             GameObject instance = Instantiate(buildingSO.Prefab, targetLocation, Quaternion.identity);
-            if (instance.TryGetComponent(out BaseBuilding baseBuilding))
-            {
-                baseBuilding.StartBuilding(this);
-            }
-            else
+            if (!instance.TryGetComponent(out BaseBuilding _))
             {
                 Debug.LogError($"Missing base building on Prefab for BuildingSO: {buildingSO.name}! Cannot build!");
                 return null;
@@ -69,6 +65,18 @@ namespace RTS.Units
             SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
             return instance;
+        }
+
+        public void ResumeBuilding(BaseBuilding building)
+        {
+            graphAgent.SetVariableValue("TargetLocation", building.transform.position);
+            graphAgent.SetVariableValue("BuildingUnderConstruction", building);
+            graphAgent.SetVariableValue("BuildingSO", building.BuildingSO);
+            graphAgent.SetVariableValue<GameObject>("Ghost", null);
+            graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
+
+            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+            Bus<UnitSelectedEvent>.Raise(new(this));
         }
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)

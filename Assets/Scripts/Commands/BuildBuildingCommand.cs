@@ -6,16 +6,31 @@ namespace RTS.Commands
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
     public class BuildBuildingCommand : ActionBase
     {
-        [field: SerializeField] public BuildingSO buildingSO { get; private set; }
+        [field: SerializeField] public BuildingSO BuildingSO { get; private set; }
         public override bool CanHandle(CommandContext ctx)
         {
-            return ctx.Commandable is IBuildingBuilder;
+            if (ctx.Commandable is not IBuildingBuilder) return false;
+            if (ctx.Hit.collider != null)
+            {
+                return ctx.Hit.collider.TryGetComponent(out BaseBuilding building)
+                    && BuildingSO == building.BuildingSO
+                    && (building.Progress.State == BuildingProgress.BuildingState.Paused
+                        || building.Progress.State == BuildingProgress.BuildingState.Destroyed);
+            }
+            return true;
         }
 
         public override void Handle(CommandContext ctx)
         {
             IBuildingBuilder builder = (IBuildingBuilder)ctx.Commandable;
-            builder.Build(buildingSO, ctx.Hit.point);
+            if (ctx.Hit.collider != null && ctx.Hit.collider.TryGetComponent(out BaseBuilding building))
+            {
+                builder.ResumeBuilding(building);
+            }
+            else
+            {
+                builder.Build(BuildingSO, ctx.Hit.point);
+            }
         }
     }
 }
