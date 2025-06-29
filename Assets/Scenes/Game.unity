@@ -20635,6 +20635,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8774220662388341600, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8774220662388341600, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: <AvailableCommands>k__BackingField.Array.size
       value: 1
       objectReference: {fileID: 0}

@@ -16,7 +16,6 @@ namespace RTS.Behavior
         [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
         [SerializeReference] public BlackboardVariable<float> Speed;
         private Animator animator;
-        private NavMeshAgent navMeshAgent;
         private float endTime;
         private Vector3 direction;
         private Transform selfTransform;
@@ -25,17 +24,10 @@ namespace RTS.Behavior
         {
             if (Self.Value == null) return Status.Failure;
             animator = Self.Value.GetComponent<Animator>();
-
-            if (Self.Value.TryGetComponent(out navMeshAgent))
-            {
-                navMeshAgent.enabled = false;
-            }
-
             selfTransform = Self.Value.transform;
             float distance = Vector3.Distance(selfTransform.position, TargetLocation.Value);
             endTime = Time.time + (distance / Speed);
             direction = (TargetLocation.Value - selfTransform.position).normalized;
-
             selfTransform.forward = direction;
             return Status.Running;
         }
@@ -56,10 +48,6 @@ namespace RTS.Behavior
         protected override void OnEnd()
         {
             animator?.SetFloat(AnimationConstants.SPEED, 0);
-            if (navMeshAgent != null)
-            {
-                navMeshAgent.enabled = true;
-            }
         }
     }
 }

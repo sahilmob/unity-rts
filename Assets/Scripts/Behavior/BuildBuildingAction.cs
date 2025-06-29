@@ -19,6 +19,7 @@ namespace RTS.Behavior
         private BaseBuilding completeBuilding;
         private Vector3 startPosition;
         private Vector3 endPosition;
+        private Renderer buildingRenderer;
 
         protected override Status OnStart()
         {
@@ -27,17 +28,17 @@ namespace RTS.Behavior
                 return Status.Failure;
             }
             startTime = Time.time;
-            GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
+            GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation, Quaternion.identity);
 
             if (!building.TryGetComponent(out completeBuilding) || completeBuilding.MainRenderer == null) return Status.Failure;
 
-            Renderer buildingRenderer = completeBuilding.MainRenderer;
+            buildingRenderer = completeBuilding.MainRenderer;
 
             BuildingUnderConstruction.Value = completeBuilding;
 
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
             endPosition = TargetLocation.Value;
-            completeBuilding.transform.position = startPosition;
+            buildingRenderer.transform.position = startPosition;
             return Status.Running;
         }
 
@@ -45,7 +46,7 @@ namespace RTS.Behavior
         {
             float normalizedTime = (Time.time - startTime) / BuildingSO.Value.BuildTime;
 
-            completeBuilding.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
+            buildingRenderer.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
 
             return normalizedTime >= 1 ? Status.Success : Status.Running;
         }
