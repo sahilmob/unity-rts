@@ -18,6 +18,7 @@ namespace RTS.Behavior
         private float startTime;
         private BaseBuilding completeBuilding;
         private Vector3 startPosition;
+        private Vector3 endPosition;
 
         protected override Status OnStart()
         {
@@ -35,6 +36,7 @@ namespace RTS.Behavior
             BuildingUnderConstruction.Value = completeBuilding;
 
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
+            endPosition = TargetLocation.Value;
             completeBuilding.transform.position = startPosition;
             return Status.Running;
         }
@@ -43,7 +45,7 @@ namespace RTS.Behavior
         {
             float normalizedTime = (Time.time - startTime) / BuildingSO.Value.BuildTime;
 
-            completeBuilding.transform.position = Vector3.Lerp(startPosition, TargetLocation.Value, normalizedTime);
+            completeBuilding.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
 
             return normalizedTime >= 1 ? Status.Success : Status.Running;
         }
