@@ -1,4 +1,6 @@
+using System;
 using RTS.Behavior;
+using RTS.Commands;
 using RTS.Environment;
 using RTS.EventBus;
 using RTS.Events;
@@ -20,6 +22,8 @@ namespace RTS.Units
                 return false;
             }
         }
+        [SerializeField] private ActionBase CancelBuildingCommand;
+
         protected override void Start()
         {
             base.Start();
@@ -62,12 +66,30 @@ namespace RTS.Units
             graphAgent.SetVariableValue("Ghost", instance);
             graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
 
+            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+            // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
             return instance;
         }
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)
         {
             Bus<SupplyEvent>.Raise(new(amount, supply));
+        }
+
+        public void CancelBuilding()
+        {
+            if (graphAgent.GetVariable("Ghost", out BlackboardVariable<GameObject> ghost) && ghost.Value != null)
+            {
+                Destroy(ghost.Value);
+            }
+            if (graphAgent.GetVariable("BuildingUnderConstruction", out BlackboardVariable<BaseBuilding> buildingUnderConstruction) && buildingUnderConstruction.Value != null)
+            {
+                Destroy(buildingUnderConstruction.Value.gameObject);
+            }
+
+            SetCommandOverrides(Array.Empty<ActionBase>());
+
+            Stop();
         }
     }
 }
