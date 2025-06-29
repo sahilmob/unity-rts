@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MustBeFullyOnNavMesh>k__BackingField: 1
   <NavMesAgentTypeId>k__BackingField: 0
-  <NavMeshTolerance>k__BackingField: 0.1
+  <NavMeshTolerance>k__BackingField: 0.25
   <Extents>k__BackingField: {x: 1.5, y: 1.5, z: 1.5}

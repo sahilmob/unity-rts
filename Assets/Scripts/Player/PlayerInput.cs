@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using RTS.Commands;
 using System.Linq;
 using UnityEngine.EventSystems;
-using Unity.Mathematics;
-using System;
 
 namespace RTS.Player
 {
@@ -23,10 +21,15 @@ namespace RTS.Player
         [SerializeField] private LayerMask intractableUnitsLayers;
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorTintColor = Color.red;
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 0, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private bool wasMouseDownOnUI;
         private ActionBase activeAction;
         private GameObject ghostInstance;
+        private MeshRenderer ghostRenderer;
         private Vector2 startingMousePosition;
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
@@ -36,6 +39,8 @@ namespace RTS.Player
         private List<ISelectable> selectedUnits = new(12);
         private HashSet<AbstractUnit> addedUnits = new(24);
         private HashSet<AbstractUnit> aliveUnits = new(100);
+        private static readonly int TINT = Shader.PropertyToID("_Tint");
+        private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
 
         private void Awake()
         {
@@ -69,6 +74,7 @@ namespace RTS.Player
             else if (activeAction.GhostPrefab != null)
             {
                 ghostInstance = Instantiate(activeAction.GhostPrefab);
+                ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
             }
         }
 
@@ -129,6 +135,10 @@ namespace RTS.Player
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers))
             {
                 ghostInstance.transform.position = hit.point;
+                bool allRestrictionsPassed = activeAction.AllRestrictionsPassed(hit.point);
+
+                ghostRenderer.material.SetColor(TINT, allRestrictionsPassed ? availableToPlaceTintColor : errorTintColor);
+                ghostRenderer.material.SetColor(FRESNEL, allRestrictionsPassed ? availableToPlaceFresnelColor : errorFresnelColor);
             }
         }
 
