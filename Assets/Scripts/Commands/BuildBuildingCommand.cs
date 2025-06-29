@@ -1,3 +1,4 @@
+using System.Linq;
 using RTS.Units;
 using UnityEngine;
 
@@ -7,9 +8,11 @@ namespace RTS.Commands
     public class BuildBuildingCommand : ActionBase
     {
         [field: SerializeField] public BuildingSO BuildingSO { get; private set; }
+        [field: SerializeField] public BuildingRestrictions[] Restrictions { get; private set; }
         public override bool CanHandle(CommandContext ctx)
         {
             if (ctx.Commandable is not IBuildingBuilder) return false;
+
             if (ctx.Hit.collider != null)
             {
                 return ctx.Hit.collider.TryGetComponent(out BaseBuilding building)
@@ -17,7 +20,8 @@ namespace RTS.Commands
                     && (building.Progress.State == BuildingProgress.BuildingState.Paused
                         || building.Progress.State == BuildingProgress.BuildingState.Destroyed);
             }
-            return true;
+
+            return AllRestrictionsPassed(ctx.Hit.point);
         }
 
         public override void Handle(CommandContext ctx)
@@ -27,10 +31,15 @@ namespace RTS.Commands
             {
                 builder.ResumeBuilding(building);
             }
-            else
+            else if (AllRestrictionsPassed(ctx.Hit.point))
             {
                 builder.Build(BuildingSO, ctx.Hit.point);
             }
+        }
+
+        private bool AllRestrictionsPassed(Vector3 point)
+        {
+            return Restrictions.Aggregate(true, (acc, b) => acc && b.CanPlace(point));
         }
     }
 }
