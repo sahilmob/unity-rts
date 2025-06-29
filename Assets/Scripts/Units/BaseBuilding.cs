@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using RTS.EventBus;
+using RTS.Events;
+using System;
 
 namespace RTS.Units
 {
@@ -16,7 +19,9 @@ namespace RTS.Units
         [SerializeField] private Material primaryMaterial;
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         private List<AbstractUnitSO> buildQueue = new(MAX_QUEUE_SIZE);
+        [field: SerializeField] public BuildingProgress Progress { get; private set; } = new(BuildingProgress.BuildingState.Destroyed, 0, 0);
         private BuildingSO buildingSO;
+        private IBuildingBuilder unitBuildingThis;
         public int QueueSize => buildQueue.Count;
         public delegate void QueueUpdatedEvent(AbstractUnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
@@ -33,6 +38,10 @@ namespace RTS.Units
             {
                 MainRenderer.material = primaryMaterial;
             }
+
+            Progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, Progress.StartTime, 1);
+            unitBuildingThis = null;
+            Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
         }
         public void BuildUnit(AbstractUnitSO unit)
         {
@@ -77,9 +86,24 @@ namespace RTS.Units
             }
         }
 
-        public void ShowGhostVisuals()
+        public void StartBuilding(IBuildingBuilder buildingBuilder)
         {
+            unitBuildingThis = buildingBuilder;
             MainRenderer.material = buildingSO.PlacementMaterial;
+
+            Progress = new(BuildingProgress.BuildingState.Building, Time.time - buildingSO.BuildTime * Progress.Progress, Progress.Progress);
+
+            Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent e)
+        {
+            if (e.Unit.TryGetComponent(out IBuildingBuilder builder) && builder == unitBuildingThis)
+            {
+                Progress = new BuildingProgress(BuildingProgress.BuildingState.Paused, Progress.StartTime, (Time.time - Progress.StartTime) / buildingSO.BuildTime);
+                Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
+            }
         }
 
         private IEnumerator DoBuildUnits()
@@ -94,6 +118,11 @@ namespace RTS.Units
                 buildQueue.RemoveAt(0);
             }
             OnQueueUpdated.Invoke(buildQueue.ToArray());
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
         }
     }
 
