@@ -16,7 +16,7 @@ namespace RTS.UI.Container
 
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
-            HashSet<ActionBase> actions = new(9);
+            HashSet<BaseCommand> actions = new(9);
 
             foreach (AbstractCommandable commandable in selectedUnits)
             {
@@ -25,7 +25,7 @@ namespace RTS.UI.Container
 
             for (int i = 0; i < actionButtons.Length; i++)
             {
-                ActionBase actionForSlot = actions.Where(a => a.Slot == i).FirstOrDefault();
+                BaseCommand actionForSlot = actions.Where(a => a.Slot == i).FirstOrDefault();
 
                 if (actionForSlot != null)
                 {
@@ -38,9 +38,9 @@ namespace RTS.UI.Container
             }
         }
 
-        private UnityAction HandleClick(ActionBase action)
+        private UnityAction HandleClick(BaseCommand action)
         {
-            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
+            return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
         }
 
         public void EnableFor(HashSet<AbstractCommandable> selectedUnits)

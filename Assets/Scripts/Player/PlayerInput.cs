@@ -27,7 +27,7 @@ namespace RTS.Player
         [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private bool wasMouseDownOnUI;
-        private ActionBase activeAction;
+        private BaseCommand activeCommand;
         private GameObject ghostInstance;
         private MeshRenderer ghostRenderer;
         private Vector2 startingMousePosition;
@@ -54,7 +54,7 @@ namespace RTS.Player
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent += HandleUnitSpawn;
-            Bus<ActionSelectedEvent>.onEvent += HandleActionSelected;
+            Bus<CommandSelectedEvent>.onEvent += HandleActionSelected;
             Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;
         }
 
@@ -64,16 +64,16 @@ namespace RTS.Player
             aliveUnits.Remove(e.Unit);
         }
 
-        private void HandleActionSelected(ActionSelectedEvent e)
+        private void HandleActionSelected(CommandSelectedEvent e)
         {
-            activeAction = e.Action;
-            if (!activeAction.RequiresClickToActivate)
+            activeCommand = e.Command;
+            if (!activeCommand.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
             }
-            else if (activeAction.GhostPrefab != null)
+            else if (activeCommand.GhostPrefab != null)
             {
-                ghostInstance = Instantiate(activeAction.GhostPrefab);
+                ghostInstance = Instantiate(activeCommand.GhostPrefab);
                 ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
             }
         }
@@ -92,7 +92,7 @@ namespace RTS.Player
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.onEvent -= HandleUnitSpawn;
-            Bus<ActionSelectedEvent>.onEvent -= HandleActionSelected;
+            Bus<CommandSelectedEvent>.onEvent -= HandleActionSelected;
             Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
         }
 
@@ -128,14 +128,14 @@ namespace RTS.Player
             {
                 Destroy(ghostInstance);
                 ghostInstance = null;
-                activeAction = null;
+                activeCommand = null;
                 return;
             }
 
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, floorLayers))
             {
                 ghostInstance.transform.position = hit.point;
-                bool allRestrictionsPassed = activeAction.AllRestrictionsPassed(hit.point);
+                bool allRestrictionsPassed = activeCommand.AllRestrictionsPassed(hit.point);
 
                 ghostRenderer.material.SetColor(TINT, allRestrictionsPassed ? availableToPlaceTintColor : errorTintColor);
                 ghostRenderer.material.SetColor(FRESNEL, allRestrictionsPassed ? availableToPlaceFresnelColor : errorFresnelColor);
@@ -162,7 +162,7 @@ namespace RTS.Player
 
         private void HandleMouseRelease()
         {
-            if (!wasMouseDownOnUI && activeAction == null && !Keyboard.current.leftCtrlKey.isPressed)
+            if (!wasMouseDownOnUI && activeCommand == null && !Keyboard.current.leftCtrlKey.isPressed)
                 DeselectAllUnits();
             HandleLeftClick();
             foreach (AbstractUnit u in addedUnits)
@@ -174,7 +174,7 @@ namespace RTS.Player
 
         private void HandleMouseDrag()
         {
-            if (activeAction != null || wasMouseDownOnUI) return;
+            if (activeCommand != null || wasMouseDownOnUI) return;
             Bounds selectionBox = ResizeSelectionBox();
             foreach (AbstractUnit u in aliveUnits)
             {
@@ -252,13 +252,13 @@ namespace RTS.Player
             }
         }
 
-        private List<ActionBase> GethAvailableCommands(AbstractUnit unit)
+        private List<BaseCommand> GethAvailableCommands(AbstractUnit unit)
         {
             OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands
                 .Where(c => c is OverrideCommandsCommand)
                 .Cast<OverrideCommandsCommand>().ToArray();
 
-            List<ActionBase> allAvailableCommands = new();
+            List<BaseCommand> allAvailableCommands = new();
 
             foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
             {
@@ -275,12 +275,12 @@ namespace RTS.Player
             if (camera == null) return;
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (activeAction == null && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
+            if (activeCommand == null && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableUnitsLayers)
             && hit.collider.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
             }
-            else if (activeAction != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers | intractableUnitsLayers))
+            else if (activeCommand != null && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(cameraRay, out hit, float.MaxValue, floorLayers | intractableUnitsLayers))
             {
                 ActivateAction(hit);
             }
@@ -298,9 +298,9 @@ namespace RTS.Player
             for (int i = 0; i < abstractCommandables.Count; i++)
             {
                 CommandContext ctx = new(abstractCommandables[i], hit, i);
-                activeAction.Handle(ctx);
+                activeCommand.Handle(ctx);
             }
-            activeAction = null;
+            activeCommand = null;
         }
 
         private void HandleRotation()

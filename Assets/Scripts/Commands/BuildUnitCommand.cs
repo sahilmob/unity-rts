@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RTS.Commands
 {
     [CreateAssetMenu(fileName = "Build Unit", menuName = "Buildings/Commands/Build Unit", order = 120)]
-    class BuildUnitCommand : ActionBase
+    class BuildUnitCommand : BaseCommand
     {
         [field: SerializeField] public AbstractUnitSO Unit { get; private set; }
 

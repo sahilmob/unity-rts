@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace RTS.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIActionButton : MonoBehaviour, IUIElement<ActionBase, UnityAction>
+    public class UIActionButton : MonoBehaviour, IUIElement<BaseCommand, UnityAction>
     {
         [SerializeField] private Image icon;
         private Button button;
@@ -17,7 +17,7 @@ namespace RTS.UI.Components
             Disable();
         }
 
-        public void EnableFor(ActionBase action, UnityAction onClick)
+        public void EnableFor(BaseCommand action, UnityAction onClick)
         {
             button.onClick.RemoveAllListeners();
             SetIcon(action.Icon);

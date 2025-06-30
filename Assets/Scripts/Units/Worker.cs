@@ -23,7 +23,7 @@ namespace RTS.Units
                 return false;
             }
         }
-        [SerializeField] private ActionBase CancelBuildingCommand;
+        [SerializeField] private BaseCommand CancelBuildingCommand;
 
         protected override void Start()
         {
@@ -63,7 +63,7 @@ namespace RTS.Units
             graphAgent.SetVariableValue("Ghost", instance);
             graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
 
-            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+            SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
             Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Gas, buildingSO.Cost.GasSO));
             Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Minerals, buildingSO.Cost.MineralsSO));
@@ -78,7 +78,7 @@ namespace RTS.Units
             graphAgent.SetVariableValue<GameObject>("Ghost", null);
             graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
 
-            SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
+            SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
             Bus<UnitSelectedEvent>.Raise(new(this));
         }
 
@@ -101,7 +101,7 @@ namespace RTS.Units
                 Bus<SupplyEvent>.Raise(new(Mathf.FloorToInt(buildingSO.Cost.Minerals * 0.75f), buildingSO.Cost.MineralsSO));
             }
 
-            SetCommandOverrides(Array.Empty<ActionBase>());
+            SetCommandOverrides(Array.Empty<BaseCommand>());
 
             Stop();
         }

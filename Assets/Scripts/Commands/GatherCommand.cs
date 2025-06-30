@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RTS.Commands
 {
     [CreateAssetMenu(fileName = "Gather Action", menuName = "Units/Commands/Gather", order = 105)]
-    class GatherCommand : ActionBase
+    class GatherCommand : BaseCommand
     {
         [SerializeField] private AbstractUnitSO commandPostSO;
         public override bool CanHandle(CommandContext ctx)

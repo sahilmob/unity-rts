@@ -5,7 +5,7 @@ using RTS.Player;
 namespace RTS.Commands
 {
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
-    public class BuildBuildingCommand : ActionBase
+    public class BuildBuildingCommand : BaseCommand
     {
         [field: SerializeField] public BuildingSO BuildingSO { get; private set; }
         public override bool CanHandle(CommandContext ctx)

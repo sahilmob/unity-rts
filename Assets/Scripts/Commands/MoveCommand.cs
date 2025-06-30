@@ -5,7 +5,7 @@ namespace RTS.Commands
 {
 
     [CreateAssetMenu(fileName = "Move Action", menuName = "Units/Commands/Move", order = 100)]
-    public class MoveCommand : ActionBase
+    public class MoveCommand : BaseCommand
     {
         [SerializeField] private float radiusMultiplier = 3.5f;
         private int unitsOnLayer = 0;
