@@ -64,6 +64,8 @@ namespace RTS.Units
 
             SetCommandOverrides(new ActionBase[] { CancelBuildingCommand });
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Gas, buildingSO.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Minerals, buildingSO.Cost.MineralsSO));
             return instance;
         }
 

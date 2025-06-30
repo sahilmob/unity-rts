@@ -1,5 +1,6 @@
 using RTS.Units;
 using UnityEngine;
+using RTS.Player;
 
 namespace RTS.Commands
 {
@@ -19,7 +20,7 @@ namespace RTS.Commands
                         || building.Progress.State == BuildingProgress.BuildingState.Destroyed);
             }
 
-            return AllRestrictionsPassed(ctx.Hit.point);
+            return HasEnoughSupplies() && AllRestrictionsPassed(ctx.Hit.point);
         }
 
         public override void Handle(CommandContext ctx)
@@ -29,10 +30,16 @@ namespace RTS.Commands
             {
                 builder.ResumeBuilding(building);
             }
-            else if (AllRestrictionsPassed(ctx.Hit.point))
+            else if (HasEnoughSupplies() && AllRestrictionsPassed(ctx.Hit.point))
             {
                 builder.Build(BuildingSO, ctx.Hit.point);
             }
+        }
+
+        private bool HasEnoughSupplies()
+        {
+            return BuildingSO.Cost.Minerals <= Supplies.Minerals
+                && BuildingSO.Cost.Gas <= Supplies.Gas;
         }
     }
 }

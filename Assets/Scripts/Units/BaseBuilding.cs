@@ -45,6 +45,9 @@ namespace RTS.Units
         {
             if (buildQueue.Count >= MAX_QUEUE_SIZE) return;
 
+            Bus<SupplyEvent>.Raise(new(-unit.Cost.Gas, unit.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(new(-unit.Cost.Minerals, unit.Cost.MineralsSO));
+
             buildQueue.Add(unit);
 
             if (buildQueue.Count == 1)
