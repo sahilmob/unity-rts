@@ -5,6 +5,7 @@ using RTS.Environment;
 using RTS.EventBus;
 using RTS.Events;
 using Unity.Behavior;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RTS.Units
@@ -95,6 +96,9 @@ namespace RTS.Units
             if (graphAgent.GetVariable("BuildingUnderConstruction", out BlackboardVariable<BaseBuilding> buildingUnderConstruction) && buildingUnderConstruction.Value != null)
             {
                 Destroy(buildingUnderConstruction.Value.gameObject);
+                BuildingSO buildingSO = buildingUnderConstruction.Value.BuildingSO;
+                Bus<SupplyEvent>.Raise(new(Mathf.FloorToInt(buildingSO.Cost.Gas * 0.75f), buildingSO.Cost.GasSO));
+                Bus<SupplyEvent>.Raise(new(Mathf.FloorToInt(buildingSO.Cost.Minerals * 0.75f), buildingSO.Cost.MineralsSO));
             }
 
             SetCommandOverrides(Array.Empty<ActionBase>());

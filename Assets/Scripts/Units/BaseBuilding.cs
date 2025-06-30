@@ -68,6 +68,10 @@ namespace RTS.Units
                 return;
             }
 
+            AbstractUnitSO unit = buildQueue[index];
+            Bus<SupplyEvent>.Raise(new(unit.Cost.Gas, unit.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(new(unit.Cost.Minerals, unit.Cost.MineralsSO));
+
             buildQueue.RemoveAt(index);
             if (index == 0)
             {
