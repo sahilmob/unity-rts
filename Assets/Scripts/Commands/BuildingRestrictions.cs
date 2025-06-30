@@ -3,39 +3,53 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[CreateAssetMenu(fileName = "Building Restrictions", menuName = "Building/Restrictions", order = 7)]
+[CreateAssetMenu(fileName = "Building Restrictions", menuName = "Buildings/Restrictions", order = 7)]
 public class BuildingRestrictions : ScriptableObject
 {
+    [field: SerializeField] public float Radius { get; private set; } = 1f;
+    [field: SerializeField] public OverlapStyle HitDetectionStyle { get; private set; } = OverlapStyle.Sphere;
+    [field: SerializeField] public LayerMask LayerMask { get; private set; }
     [field: SerializeField] public bool MustBeFullyOnNavMesh { get; private set; } = true;
     [field: SerializeField] public int NavMesAgentTypeId { get; private set; }
     [field: SerializeField] public float NavMeshTolerance { get; private set; } = 0.1f;
     [field: SerializeField] public Vector3 Extents { get; private set; } = Vector3.one;
+    private Collider[] hitColliders = new Collider[1];
 
     public bool CanPlace(Vector3 position)
     {
-        bool isOnNavMesh = true;
+        int hits = HitDetectionStyle == OverlapStyle.Sphere ?
+             Physics.OverlapSphereNonAlloc(position, Radius, hitColliders, LayerMask)
+             :
+             Physics.OverlapBoxNonAlloc(position, Extents, hitColliders, Quaternion.identity, LayerMask);
 
         if (MustBeFullyOnNavMesh)
         {
-            NavMeshQueryFilter queryFilter = new()
-            {
-                areaMask = NavMesh.AllAreas,
-                agentTypeID = NavMesAgentTypeId
-            };
-            isOnNavMesh = IsFullyOnNavMesh(position, queryFilter);
+            bool isOnNavMesh = IsFullyOnNavMesh(position);
 
-            return isOnNavMesh;
+            return hits == 0 && isOnNavMesh;
         }
 
-        return true;
+        return hits == 0;
     }
 
-    private bool IsFullyOnNavMesh(Vector3 position, NavMeshQueryFilter queryFilter)
+    private bool IsFullyOnNavMesh(Vector3 position)
     {
+        NavMeshQueryFilter queryFilter = new()
+        {
+            areaMask = NavMesh.AllAreas,
+            agentTypeID = NavMesAgentTypeId
+        };
+
         bool isOnNavMesh = NavMesh.SamplePosition(position + new Vector3(Extents.x, 0, Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
         isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(Extents.x, 0, -Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
         isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(-Extents.x, 0, -Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
         isOnNavMesh = isOnNavMesh && NavMesh.SamplePosition(position + new Vector3(-Extents.x, 0, Extents.z), out NavMeshHit _, NavMeshTolerance, queryFilter);
         return isOnNavMesh;
+
+    }
+    public enum OverlapStyle
+    {
+        Sphere,
+        Box
     }
 }
