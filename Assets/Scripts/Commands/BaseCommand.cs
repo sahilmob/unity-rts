@@ -2,12 +2,14 @@
 using System;
 using UnityEngine;
 using System.Linq;
+using System.ComponentModel;
 
 
 namespace RTS.Commands
 {
     public abstract class BaseCommand : ScriptableObject, ICommand
     {
+        [field: SerializeField] public string DisplayName { get; private set; } = "Command";
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: Range(0, 8)] public int Slot;
         [field: SerializeField] public bool RequiresClickToActivate { get; private set; } = true;
