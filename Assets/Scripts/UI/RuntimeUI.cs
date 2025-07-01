@@ -13,6 +13,8 @@ namespace RTS.UI
         private HashSet<AbstractCommandable> selectedUnits = new();
         [SerializeField] private ActionsUI actionsUI;
         [SerializeField] private BuildingBuildingUI buildingBuildingUI;
+        [SerializeField] private UnitIconUI unitIconUI;
+        [SerializeField] private SingleUnitSelectedUI unitSelectedUI;
         private void Awake()
         {
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
@@ -25,6 +27,8 @@ namespace RTS.UI
         {
             actionsUI.Disable();
             buildingBuildingUI.Disable();
+            unitIconUI.Disable();
+            unitSelectedUI.Disable();
         }
 
         private void OnDestroy()
@@ -47,20 +51,41 @@ namespace RTS.UI
                 selectedUnits.Remove(unit);
             }
 
+            RefreshUI();
+        }
+
+        private void RefreshUI()
+        {
             if (selectedUnits.Count == 0)
             {
                 actionsUI.Disable();
                 buildingBuildingUI.Disable();
+                unitIconUI.Disable();
+                unitSelectedUI.Disable();
             }
             else
             {
                 actionsUI.EnableFor(selectedUnits);
-                if (selectedUnits.Count == 1 && selectedUnits.First() is BaseBuilding building)
+
+                if (selectedUnits.Count == 1)
                 {
-                    buildingBuildingUI.EnableFor(building);
+                    AbstractCommandable commandable = selectedUnits.First();
+                    unitIconUI.EnableFor(commandable);
+                    unitSelectedUI.EnableFor(commandable);
+
+                    if (commandable is BaseBuilding building)
+                    {
+                        buildingBuildingUI.EnableFor(building);
+                    }
+                    else
+                    {
+                        buildingBuildingUI.Disable();
+                    }
                 }
                 else
                 {
+                    unitIconUI.Disable();
+                    unitSelectedUI.Disable();
                     buildingBuildingUI.Disable();
                 }
             }
@@ -71,12 +96,7 @@ namespace RTS.UI
             if (e.Unit is AbstractCommandable unit)
             {
                 selectedUnits.Add(unit);
-                actionsUI.EnableFor(selectedUnits);
-            }
-
-            if (selectedUnits.Count == 1 && e.Unit is BaseBuilding building)
-            {
-                buildingBuildingUI.EnableFor(building);
+                RefreshUI();
             }
         }
 
