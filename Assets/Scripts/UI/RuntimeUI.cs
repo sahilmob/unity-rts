@@ -19,6 +19,7 @@ namespace RTS.UI
             Bus<UnitSelectedEvent>.onEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent += HandleUnitDeselected;
             Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;
+            Bus<SupplyEvent>.onEvent += HandleSupplyEvent;
         }
 
         private void Start()
@@ -32,6 +33,7 @@ namespace RTS.UI
             Bus<UnitSelectedEvent>.onEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.onEvent -= HandleUnitDeselected;
             Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
+            Bus<SupplyEvent>.onEvent -= HandleSupplyEvent;
         }
 
         private void HandleUnitDeath(UnitDeathEvent e)
@@ -77,6 +79,11 @@ namespace RTS.UI
             {
                 buildingBuildingUI.EnableFor(building);
             }
+        }
+
+        private void HandleSupplyEvent(SupplyEvent e)
+        {
+            actionsUI.EnableFor(selectedUnits);
         }
     }
 }

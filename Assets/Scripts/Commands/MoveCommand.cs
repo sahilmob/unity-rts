@@ -48,6 +48,11 @@ namespace RTS.Commands
                 radialOffset = 2 * Mathf.PI / maxUnitsOnLayer;
             }
         }
+
+        public override bool isLocked(CommandContext ctx)
+        {
+            return false;
+        }
     }
 
 }

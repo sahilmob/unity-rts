@@ -15,6 +15,7 @@ namespace RTS.Commands
         [field: SerializeField] public BuildingRestrictions[] Restrictions { get; private set; }
         public abstract bool CanHandle(CommandContext ctx);
         public abstract void Handle(CommandContext ctx);
+        public abstract bool isLocked(CommandContext ctx);
 
 
         public bool AllRestrictionsPassed(Vector3 point)

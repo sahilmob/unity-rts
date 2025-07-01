@@ -17,4 +17,9 @@ public class CancelBuildingCommand : BaseCommand
         IBuildingBuilder buildingBuilder = (IBuildingBuilder)ctx.Commandable;
         buildingBuilder.CancelBuilding();
     }
+
+    public override bool isLocked(CommandContext ctx)
+    {
+        return false;
+    }
 }

@@ -18,5 +18,10 @@ namespace RTS.Commands
             unit.Stop();
         }
 
+        public override bool isLocked(CommandContext ctx)
+        {
+            return false;
+        }
+
     }
 }

@@ -16,5 +16,10 @@ namespace RTS.Commands
         {
             ctx.Commandable.SetCommandOverrides(Commands);
         }
+
+        public override bool isLocked(CommandContext ctx)
+        {
+            return false;
+        }
     }
 }

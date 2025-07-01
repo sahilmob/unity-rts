@@ -41,5 +41,10 @@ namespace RTS.Commands
             return BuildingSO.Cost.Minerals <= Supplies.Minerals
                 && BuildingSO.Cost.Gas <= Supplies.Gas;
         }
+
+        public override bool isLocked(CommandContext ctx)
+        {
+            return !HasEnoughSupplies();
+        }
     }
 }

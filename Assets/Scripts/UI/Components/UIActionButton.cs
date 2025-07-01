@@ -21,7 +21,7 @@ namespace RTS.UI.Components
         {
             button.onClick.RemoveAllListeners();
             SetIcon(action.Icon);
-            button.interactable = true;
+            button.interactable = !action.isLocked(new CommandContext());
             button.onClick.AddListener(onClick);
         }
 

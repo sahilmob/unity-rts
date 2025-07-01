@@ -41,5 +41,10 @@ namespace RTS.Commands
             return collider.TryGetComponent(out BaseBuilding b)
                     && b.UnitSO.Equals(commandPostSO);
         }
+
+        public override bool isLocked(CommandContext ctx)
+        {
+            return false;
+        }
     }
 }
