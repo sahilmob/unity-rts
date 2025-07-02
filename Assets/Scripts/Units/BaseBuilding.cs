@@ -27,6 +27,7 @@ namespace RTS.Units
         private void Awake()
         {
             BuildingSO = UnitSO as BuildingSO;
+            MaxHealth = BuildingSO.Health;
         }
 
         protected override void Start()
@@ -94,10 +95,16 @@ namespace RTS.Units
 
         public void StartBuilding(IBuildingBuilder buildingBuilder)
         {
+            Awake();
             unitBuildingThis = buildingBuilder;
             MainRenderer.material = BuildingSO.PlacementMaterial;
 
             Progress = new(BuildingProgress.BuildingState.Building, Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress);
+
+            if (Progress.Progress == 0)
+            {
+                Heal(1);
+            }
 
             Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
             Bus<UnitDeathEvent>.onEvent += HandleUnitDeath;

@@ -20,6 +20,7 @@ namespace RTS.Behavior
         private Vector3 startPosition;
         private Vector3 endPosition;
         private Renderer buildingRenderer;
+        private float targetHealth;
 
         protected override Status OnStart()
         {
@@ -47,6 +48,15 @@ namespace RTS.Behavior
             float normalizedTime = (Time.time - startTime) / BuildingSO.Value.BuildTime;
 
             buildingRenderer.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
+
+            targetHealth += Time.deltaTime * (BuildingSO.Value.Health / BuildingSO.Value.BuildTime);
+
+            if (targetHealth >= 1)
+            {
+                int healAmount = Mathf.FloorToInt(targetHealth);
+                completeBuilding.Heal(healAmount);
+                targetHealth -= healAmount;
+            }
 
             return normalizedTime >= 1 ? Status.Success : Status.Running;
         }
