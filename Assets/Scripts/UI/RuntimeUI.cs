@@ -12,7 +12,7 @@ namespace RTS.UI
     {
         private HashSet<AbstractCommandable> selectedUnits = new();
         [SerializeField] private ActionsUI actionsUI;
-        [SerializeField] private BuildingBuildingUI buildingBuildingUI;
+        [SerializeField] BuildingSelectedUI buildingSelectedUI;
         [SerializeField] private UnitIconUI unitIconUI;
         [SerializeField] private SingleUnitSelectedUI unitSelectedUI;
         private void Awake()
@@ -26,7 +26,7 @@ namespace RTS.UI
         private void Start()
         {
             actionsUI.Disable();
-            buildingBuildingUI.Disable();
+            buildingSelectedUI.Disable();
             unitIconUI.Disable();
             unitSelectedUI.Disable();
         }
@@ -59,7 +59,7 @@ namespace RTS.UI
             if (selectedUnits.Count == 0)
             {
                 actionsUI.Disable();
-                buildingBuildingUI.Disable();
+                buildingSelectedUI.Disable();
                 unitIconUI.Disable();
                 unitSelectedUI.Disable();
             }
@@ -75,18 +75,20 @@ namespace RTS.UI
 
                     if (commandable is BaseBuilding building)
                     {
-                        buildingBuildingUI.EnableFor(building);
+                        unitSelectedUI.Disable();
+                        buildingSelectedUI.EnableFor(building);
                     }
                     else
                     {
-                        buildingBuildingUI.Disable();
+                        buildingSelectedUI.Disable();
+                        unitSelectedUI.EnableFor(commandable);
                     }
                 }
                 else
                 {
                     unitIconUI.Disable();
                     unitSelectedUI.Disable();
-                    buildingBuildingUI.Disable();
+                    buildingSelectedUI.Disable();
                 }
             }
         }

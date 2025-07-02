@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f08ea4b1f56491f9c2d3139e889a64, type: 3}
   m_Name: 400 Minerals
   m_EditorClassIdentifier: 
-  <Minerals>k__BackingField: 400
+  <Minerals>k__BackingField: 0
   <Gas>k__BackingField: 0
   <MineralsSO>k__BackingField: {fileID: 11400000, guid: 3310c7f39f59e4b14abb0b507ab2a7b2, type: 2}
   <GasSO>k__BackingField: {fileID: 11400000, guid: 893b78a2f08d24100b71cbef87346983, type: 2}

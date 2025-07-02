@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using RTS.UI.Components;
 using RTS.Units;
@@ -26,12 +25,13 @@ namespace RTS.UI.Container
 
         public void EnableFor(BaseBuilding building)
         {
-            progressBar.SetProgress(0);
             gameObject.SetActive(true);
+            progressBar.SetProgress(0);
             this.building = building;
             building.OnQueueUpdated += HandleQueueUpdated;
 
-            SetupUnitButtons();
+            if (building != null)
+                SetupUnitButtons();
 
             updateUnitProgressCo = StartCoroutine(UpdateUnitProgress());
         }
@@ -59,7 +59,8 @@ namespace RTS.UI.Container
                 updateUnitProgressCo = StartCoroutine(UpdateUnitProgress());
             }
 
-            SetupUnitButtons();
+            if (building != null)
+                SetupUnitButtons();
         }
 
         private IEnumerator UpdateUnitProgress()

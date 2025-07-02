@@ -21,7 +21,10 @@ namespace RTS.UI.Container
 
             foreach (AbstractCommandable commandable in selectedUnits)
             {
-                actions.UnionWith(commandable.AvailableCommands);
+                if (commandable.AvailableCommands != null)
+                {
+                    actions.UnionWith(commandable.AvailableCommands);
+                }
             }
 
             for (int i = 0; i < actionButtons.Length; i++)

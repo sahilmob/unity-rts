@@ -5871,13 +5871,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 467497951}
+  - component: {fileID: 467497952}
   m_Layer: 5
   m_Name: Building Selected Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &467497951
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5899,6 +5900,21 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &467497952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467497949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c77039c189d4249ca899465919c6b587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  singleUnitSelectedUI: {fileID: 1315305436}
+  buildingBuildingUI: {fileID: 1619984283}
+  buildingUnderConstructionUI: {fileID: 678677022}
 --- !u!1 &468676273
 GameObject:
   m_ObjectHideFlags: 0
@@ -7456,7 +7472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionsUI: {fileID: 1741608388}
-  buildingBuildingUI: {fileID: 1619984283}
+  buildingSelectedUI: {fileID: 467497952}
   unitIconUI: {fileID: 1439996932}
   unitSelectedUI: {fileID: 1315305436}
 --- !u!114 &640315636
@@ -7866,6 +7882,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 678677021}
+  - component: {fileID: 678677022}
   m_Layer: 5
   m_Name: Building Under Construction Container
   m_TagString: Untagged
@@ -7895,6 +7912,20 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 0}
   m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &678677022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678677020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ceb9e4f086f48ea9a7a79ca50ffc32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: {fileID: 749207882}
+  progressBar: {fileID: 1821982354}
 --- !u!1 &679504034
 GameObject:
   m_ObjectHideFlags: 0
@@ -25035,6 +25066,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4960964140495102217, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
   m_PrefabInstance: {fileID: 1819996207}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1821982354 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5478740862375836643, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+  m_PrefabInstance: {fileID: 1819996207}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b381143d1f004549b93923f3a1d653c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1825491451 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6142114376295911246, guid: 059f940466acbb14788d1893d17779c9, type: 3}

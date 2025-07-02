@@ -40,6 +40,7 @@ namespace RTS.Units
             Progress = new BuildingProgress(BuildingProgress.BuildingState.Completed, Progress.StartTime, 1);
             unitBuildingThis = null;
             Bus<UnitDeathEvent>.onEvent -= HandleUnitDeath;
+            Bus<BuildingSpawnEvent>.Raise(new(this));
         }
         public void BuildUnit(AbstractUnitSO unit)
         {
