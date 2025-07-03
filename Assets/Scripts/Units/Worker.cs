@@ -5,7 +5,6 @@ using RTS.Environment;
 using RTS.EventBus;
 using RTS.Events;
 using Unity.Behavior;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RTS.Units
@@ -35,6 +34,37 @@ namespace RTS.Units
             if (graphAgent.GetVariable("GatherSuppliesEvent", out BlackboardVariable<GatherSuppliesEventChannel> evtChannel))
             {
                 evtChannel.Value.Event += HandleGatherSupplies;
+            }
+
+            if (graphAgent.GetVariable("BuildingEventsChannel", out BlackboardVariable<BuildingEventChannel> buildingEvtChannel))
+            {
+                buildingEvtChannel.Value.Event += HandleBuildingEvent;
+            }
+
+        }
+
+        private void HandleBuildingEvent(GameObject worker, BuildingEventType evt, BaseBuilding building)
+        {
+            switch (evt)
+            {
+                case BuildingEventType.ArrivedAt:
+                    if (building != null && building.Progress.State == BuildingProgress.BuildingState.Building)
+                    {
+                        Stop();
+                        break;
+                    }
+                    SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
+                    break;
+                case BuildingEventType.Begin:
+                    SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
+                    break;
+                case BuildingEventType.Cancel:
+                case BuildingEventType.Abort:
+                    SetCommandOverrides(null);
+                    break;
+                case BuildingEventType.Completed:
+                default:
+                    break;
             }
         }
 
@@ -67,7 +97,6 @@ namespace RTS.Units
             graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
 
             SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
-            // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
             Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Gas, buildingSO.Cost.GasSO));
             Bus<SupplyEvent>.Raise(new(-buildingSO.Cost.Minerals, buildingSO.Cost.MineralsSO));
             return instance;
@@ -80,9 +109,6 @@ namespace RTS.Units
             graphAgent.SetVariableValue("BuildingSO", building.BuildingSO);
             graphAgent.SetVariableValue<GameObject>("Ghost", null);
             graphAgent.SetVariableValue("Command", UnitCommand.BuildBuilding);
-
-            SetCommandOverrides(new BaseCommand[] { CancelBuildingCommand });
-            Bus<UnitSelectedEvent>.Raise(new(this));
         }
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)

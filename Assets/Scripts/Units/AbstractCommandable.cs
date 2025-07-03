@@ -10,6 +10,7 @@ namespace RTS.Units
 {
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
+        [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public int CurrentHealth { get; protected set; }
         [field: SerializeField] public int MaxHealth { get; protected set; }
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
@@ -27,12 +28,14 @@ namespace RTS.Units
         {
             decalProjector?.gameObject?.SetActive(false);
             SetCommandOverrides(null);
+            IsSelected = false;
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
         public void Select()
         {
             decalProjector?.gameObject?.SetActive(true);
+            IsSelected = true;
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
 
@@ -47,7 +50,10 @@ namespace RTS.Units
                 AvailableCommands = commands;
             }
 
-            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            if (IsSelected)
+            {
+                Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            }
         }
 
         public void Heal(int amount)

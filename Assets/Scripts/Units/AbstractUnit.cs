@@ -17,6 +17,7 @@ namespace RTS.Units
 
         public void MoveTo(Vector3 position)
         {
+            SetCommandOverrides(null);
             graphAgent.SetVariableValue("TargetLocation", position);
             graphAgent.SetVariableValue("Command", UnitCommand.Move);
         }
@@ -38,6 +39,7 @@ namespace RTS.Units
 
         public void Stop()
         {
+            SetCommandOverrides(null);
             graphAgent.SetVariableValue("Command", UnitCommand.Stop);
         }
 
