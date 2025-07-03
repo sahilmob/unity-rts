@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using RTS.Commands;
 using System.Linq;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace RTS.Player
 {
@@ -239,12 +240,16 @@ namespace RTS.Player
 
                 for (int i = 0; i < abstractUnits.Count; i++)
                 {
-                    CommandContext ctx = new(abstractUnits[i], hit, i);
+                    CommandContext ctx = new(abstractUnits[i], hit, i, MouseButton.Right);
                     foreach (ICommand c in GethAvailableCommands(abstractUnits[i]))
                     {
                         if (c.CanHandle(ctx))
                         {
                             c.Handle(ctx);
+                            if (c.IsSingleUnitCommand)
+                            {
+                                return;
+                            }
                             break;
                         }
                     }
@@ -298,7 +303,14 @@ namespace RTS.Player
             for (int i = 0; i < abstractCommandables.Count; i++)
             {
                 CommandContext ctx = new(abstractCommandables[i], hit, i);
-                activeCommand.Handle(ctx);
+                if (activeCommand.CanHandle(ctx))
+                {
+                    activeCommand.Handle(ctx);
+                    if (activeCommand.IsSingleUnitCommand)
+                    {
+                        break;
+                    }
+                }
             }
             activeCommand = null;
         }

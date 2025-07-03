@@ -23,6 +23,9 @@ namespace RTS.Units
                 return false;
             }
         }
+
+        public bool IsBuilding => graphAgent.GetVariable("Command", out BlackboardVariable<UnitCommand> command) && command.Value == UnitCommand.BuildBuilding;
+
         [SerializeField] private BaseCommand CancelBuildingCommand;
 
         protected override void Start()

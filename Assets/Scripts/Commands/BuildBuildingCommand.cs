@@ -10,9 +10,9 @@ namespace RTS.Commands
         [field: SerializeField] public BuildingSO BuildingSO { get; private set; }
         public override bool CanHandle(CommandContext ctx)
         {
-            if (ctx.Commandable is not IBuildingBuilder) return false;
+            if (ctx.Commandable is not IBuildingBuilder builder || builder.IsBuilding) return false;
 
-            if (ctx.Hit.collider != null)
+            if (ctx.Hit.collider != null && ctx.MouseButton == UnityEngine.InputSystem.LowLevel.MouseButton.Right)
             {
                 return ctx.Hit.collider.TryGetComponent(out BaseBuilding building)
                     && BuildingSO == building.BuildingSO

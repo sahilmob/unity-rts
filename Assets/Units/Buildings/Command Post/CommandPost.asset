@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CommandPost
   m_EditorClassIdentifier: 
   <DisplayName>k__BackingField: Command Post
-  <health>k__BackingField: 400
+  <Health>k__BackingField: 100
   <Prefab>k__BackingField: {fileID: 1589499662120937400, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
-  <BuildTime>k__BackingField: 7
+  <BuildTime>k__BackingField: 60
   <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: 23da38e14e3084b458aae636346cc001, type: 2}
   <PlacementMaterial>k__BackingField: {fileID: -876546973899608171, guid: a7bfdfe00ff8fe04a906c3ac9bd30519, type: 3}
