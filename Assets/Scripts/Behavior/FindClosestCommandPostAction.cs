@@ -26,7 +26,7 @@ namespace RTS.Behavior
 
             foreach (Collider c in colliders)
             {
-                if (c.TryGetComponent(out BaseBuilding b) && b.UnitSO.Equals(CommandPostBuilding.Value))
+                if (c.TryGetComponent(out BaseBuilding b) && b.UnitSO.Equals(CommandPostBuilding.Value) && b.Progress.State == BuildingProgress.BuildingState.Completed)
                 {
                     nearbyCommandPosts.Add(b);
                 }
@@ -36,6 +36,9 @@ namespace RTS.Behavior
             {
                 return Status.Failure;
             }
+
+            ClosestBuildingComparer comparer = new(Unit.Value.transform.position);
+            nearbyCommandPosts.Sort(comparer);
 
             CommandPost.Value = nearbyCommandPosts[0].gameObject;
 

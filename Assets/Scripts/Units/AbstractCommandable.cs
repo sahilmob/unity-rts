@@ -14,7 +14,7 @@ namespace RTS.Units
         [field: SerializeField] public int CurrentHealth { get; protected set; }
         [field: SerializeField] public int MaxHealth { get; protected set; }
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
-        [field: SerializeField] private DecalProjector decalProjector;
+        [field: SerializeField] protected DecalProjector decalProjector;
         [field: SerializeField] public AbstractUnitSO UnitSO { get; private set; }
         public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HealthUpdatedEvent OnHealthUpdated;
@@ -24,7 +24,7 @@ namespace RTS.Units
         {
             initialCommands = AvailableCommands;
         }
-        public void Deselect()
+        public virtual void Deselect()
         {
             decalProjector?.gameObject?.SetActive(false);
             SetCommandOverrides(null);
@@ -32,7 +32,7 @@ namespace RTS.Units
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
-        public void Select()
+        public virtual void Select()
         {
             decalProjector?.gameObject?.SetActive(true);
             IsSelected = true;
