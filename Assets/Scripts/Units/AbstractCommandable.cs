@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace RTS.Units
 {
-    public abstract class AbstractCommandable : MonoBehaviour, ISelectable
+    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable
     {
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public int CurrentHealth { get; protected set; }
@@ -16,6 +16,7 @@ namespace RTS.Units
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
         [field: SerializeField] protected DecalProjector decalProjector;
         [field: SerializeField] public AbstractUnitSO UnitSO { get; private set; }
+        public Transform Transform => transform;
         public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HealthUpdatedEvent OnHealthUpdated;
         private BaseCommand[] initialCommands;
@@ -61,6 +62,23 @@ namespace RTS.Units
             int lastHealth = CurrentHealth;
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
             OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);
+        }
+
+        public void TakeDamage(int damage)
+        {
+            int lastHealth = CurrentHealth;
+            CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, CurrentHealth);
+            OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);
+
+            if (CurrentHealth <= 0)
+            {
+                Die();
+            }
+        }
+
+        public void Die()
+        {
+            Destroy(gameObject);
         }
     }
 }
