@@ -67,7 +67,8 @@ GameObject:
   - component: {fileID: 4556868348065212012}
   - component: {fileID: 4212464277386913961}
   - component: {fileID: 4568543003088131723}
-  m_Layer: 0
+  - component: {fileID: 8470989522790109251}
+  m_Layer: 7
   m_Name: Barracks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,11 +120,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5827066523746683823}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ecfccbd538fc4888bb365d8a4afef81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsSelected>k__BackingField: 0
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   <AvailableCommands>k__BackingField:
@@ -132,7 +134,31 @@ MonoBehaviour:
   decalProjector: {fileID: 4669960411509571453}
   <UnitSO>k__BackingField: {fileID: 11400000, guid: 9d1f8e608acd545fdaa28893b02d6c06, type: 2}
   <CurrentQueueStartTime>k__BackingField: 0
+  <BuildingSO>k__BackingField: {fileID: 11400000, guid: 9d1f8e608acd545fdaa28893b02d6c06, type: 2}
   <BuildingUnit>k__BackingField: {fileID: 0}
+  <MainRenderer>k__BackingField: {fileID: 254357829607820714}
+  primaryMaterial: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
+  navMeshObstacle: {fileID: 8470989522790109251}
+  <Progress>k__BackingField:
+    <StartTime>k__BackingField: 0
+    <Progress>k__BackingField: 0
+    <State>k__BackingField: 3
+--- !u!208 &8470989522790109251
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5827066523746683823}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 0.125, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &1460921894348755246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,7 +222,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: e000aecf108266147a639a6e08659832, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
+      objectReference: {fileID: -876546973899608171, guid: a7bfdfe00ff8fe04a906c3ac9bd30519, type: 3}
     - target: {fileID: -7511558181221131132, guid: e000aecf108266147a639a6e08659832, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -210,6 +236,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e000aecf108266147a639a6e08659832, type: 3}
+--- !u!23 &254357829607820714 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: e000aecf108266147a639a6e08659832, type: 3}
+  m_PrefabInstance: {fileID: 1460921894348755246}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1426662265331054277 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e000aecf108266147a639a6e08659832, type: 3}

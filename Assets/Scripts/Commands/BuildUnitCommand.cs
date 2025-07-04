@@ -1,4 +1,3 @@
-using System;
 using RTS.Player;
 using RTS.Units;
 using UnityEngine;
@@ -25,8 +24,8 @@ namespace RTS.Commands
 
         private bool HasEnoughSupplies()
         {
-            return Unit.Cost.Minerals <= Supplies.Minerals
-                && Unit.Cost.Gas <= Supplies.Gas;
+            return Unit?.Cost?.Minerals <= Supplies.Minerals
+                && Unit?.Cost?.Gas <= Supplies.Gas;
         }
 
         public override bool isLocked(CommandContext ctx)

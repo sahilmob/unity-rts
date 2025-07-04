@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d22e508611e34454830b0a2563c5784, type: 3}
   m_Name: Airport
   m_EditorClassIdentifier: 
-  <health>k__BackingField: 100
+  <DisplayName>k__BackingField: Airport
+  <Health>k__BackingField: 1300
   <Prefab>k__BackingField: {fileID: 5827066523746683823, guid: ce58b4a7676b51d45869f6a426cf2db8, type: 3}
-  <BuildTime>k__BackingField: 5
+  <BuildTime>k__BackingField: 70
   <Icon>k__BackingField: {fileID: 21300000, guid: b947cd2ebe26be8448a6f7c04aabc5e5, type: 3}
+  <Cost>k__BackingField: {fileID: 11400000, guid: 78ddb41b398454c1cb6742cbcd38a350, type: 2}
   <PlacementMaterial>k__BackingField: {fileID: -876546973899608171, guid: a7bfdfe00ff8fe04a906c3ac9bd30519, type: 3}

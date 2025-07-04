@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d22e508611e34454830b0a2563c5784, type: 3}
   m_Name: Supply Hut
   m_EditorClassIdentifier: 
-  <health>k__BackingField: 100
+  <DisplayName>k__BackingField: Supply Hut
+  <Health>k__BackingField: 500
   <Prefab>k__BackingField: {fileID: 6964012305514025925, guid: 60174e2531fe1794a81f4a279e17f61d, type: 3}
-  <BuildTime>k__BackingField: 5
+  <BuildTime>k__BackingField: 40
   <Icon>k__BackingField: {fileID: 21300000, guid: 5b1043abe99f2d943b94b631a2aa42d9, type: 3}
+  <Cost>k__BackingField: {fileID: 11400000, guid: 0cc16526d8f4b40c5a8a52dc9fb957c2, type: 2}
   <PlacementMaterial>k__BackingField: {fileID: -876546973899608171, guid: a7bfdfe00ff8fe04a906c3ac9bd30519, type: 3}

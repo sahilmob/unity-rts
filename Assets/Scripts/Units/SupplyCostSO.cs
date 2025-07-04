@@ -2,7 +2,7 @@
 using RTS.Environment;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Supply Cost", menuName = "Supply Cost", order = 5)]
+[CreateAssetMenu(fileName = "Supply Cost", menuName = "Supply/Supply Cost", order = 5)]
 public class SupplyCostSO : ScriptableObject
 {
     [field: SerializeField] public int Minerals { get; private set; } = 50;
