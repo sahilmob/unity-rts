@@ -70,6 +70,7 @@ GameObject:
   - component: {fileID: 1289879592863205657}
   - component: {fileID: 8985835187612719804}
   - component: {fileID: 7826646248505451610}
+  - component: {fileID: 4698845896824562020}
   m_Layer: 6
   m_Name: Worker
   m_TagString: Untagged
@@ -128,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f01717442fe482487cbd6a72b923ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsSelected>k__BackingField: 0
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   <AvailableCommands>k__BackingField:
@@ -211,6 +213,33 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 6510919576379171628}
+--- !u!54 &4698845896824562020
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6510919576379171628}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &6023479588184438867
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 
 
+using System;
 using RTS.EventBus;
 using RTS.Events;
 using Unity.Behavior;
@@ -11,6 +12,7 @@ namespace RTS.Units
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
     public abstract class AbstractUnit : AbstractCommandable, IMovable
     {
+        [SerializeField] private DamageableSensor damageableSensor;
         public float AgentRadius => agent.radius;
         private NavMeshAgent agent;
         protected BehaviorGraphAgent graphAgent;
@@ -35,6 +37,21 @@ namespace RTS.Units
             CurrentHealth = UnitSO.Health;
             MaxHealth = UnitSO.Health;
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
+            if (damageableSensor != null)
+            {
+                damageableSensor.OnUnitEnter += HandleUnitEnter;
+                damageableSensor.OnUnitExit += HandleUnitExit;
+            }
+        }
+
+        private void HandleUnitExit(IDamageable damageable)
+        {
+            Debug.Log($"Detected unit enter{damageableSensor.Damageables.Count}");
+        }
+
+        private void HandleUnitEnter(IDamageable damageable)
+        {
+            Debug.Log($"Detected unit exit {damageableSensor.Damageables.Count}");
         }
 
         public void Stop()
@@ -46,6 +63,11 @@ namespace RTS.Units
         private void OnDestroy()
         {
             Bus<UnitDeathEvent>.Raise(new(this));
+            if (damageableSensor != null)
+            {
+                damageableSensor.OnUnitEnter -= HandleUnitEnter;
+                damageableSensor.OnUnitExit -= HandleUnitExit;
+            }
         }
     }
 }
